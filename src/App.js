@@ -8,12 +8,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Login from './Login';
 import Main from './Main';
+import Auth from './Auth';
 //const client_id = window.env.CLIENT_ID;
 
 
 function App() {
   const credentials = ApiKey();
-  const [token, setToken] = useState('');
+  // const [code, setCode] = useState('');
+  // const [token, setToken] = useState('');
 /*
   useEffect(() => {
     axios('https://accounts.spotify.com/api/token', {
@@ -33,6 +35,15 @@ function App() {
   */
 
   const code = new URLSearchParams(window.location.search).get("code");
+  // const token = code ? Auth(code) : null;
+  // console.log(token);
+  // useState(() => {
+  //   if (code)
+  //   {
+  //     setToken(Auth(code));
+  //   }
+  // }, [code])
+  
 
   return (
     <div className="App">

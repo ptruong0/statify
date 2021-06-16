@@ -65,4 +65,4 @@ const Auth = (code) => {
     return accessToken;
 }
 
-export default Auth
+export default Auth;
