@@ -1,0 +1,68 @@
+$spotify-green: #1DB954;
+.login-page {
+    background-color: black;
+    height: 100vh;
+    width: 100vw;
+    padding: 25vh 0;
+}
+
+.landing-jumbotron {
+    max-width: 50vw;
+    height: 50vh;
+    text-align: center;
+    padding-top: 5vh;
+    border-radius: 5vw;
+    margin: auto;
+    background-color: black;
+    border: 3px solid $spotify-green;
+    color: white;
+    overflow-y: scroll;
+    .login-btn {
+        border-radius: 3vh;
+        padding: 2vh 2vw;
+        background-color: $spotify-green;
+        color: white;
+        margin-top: 19vh;
+    }
+}
+
+.my-navbar {
+    .nav-text {
+        color: white;
+        text-align: center;
+    }
+}
+
+.playlists-row {
+    width: 100vw;
+    margin: auto;
+    .text-container {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+}
+
+.playlists-list {
+    text-align: left;
+    .playlist-card {
+        padding-left: 2vw;
+    }
+}
+
+.stats-section {
+    padding-top: 2vh;
+    .song-list {
+        text-align: left;
+        margin: none;
+        padding-left: 5vw;
+        border: none;
+    }
+    .song-accordion {
+        padding-top: 1vh;
+    }
+}
+
+::-webkit-scrollbar {
+    display: none;
+}

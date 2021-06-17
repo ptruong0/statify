@@ -1,7 +1,8 @@
 import React from 'react';
-import { ListGroup } from 'react-bootstrap';
+import { ListGroup, Row } from 'react-bootstrap';
 
 import PlaylistCard from './PlaylistCard';
+import './styles.scss';
 
 // const Playlists = (props) => {
 //     const components = props.list ? props.list.map((p) => {
@@ -17,16 +18,29 @@ import PlaylistCard from './PlaylistCard';
 // }
 
 const Playlists = (props) => {
-    const components = props.list ? props.list.map((p) => {
+    const components = props.list ? props.list.map((p, index) => {
         console.log(p.name);
-        return <ListGroup.Item variant="success">{p.name}</ListGroup.Item>;
+        // return <ListGroup.Item variant="success" action>{p.name}</ListGroup.Item>;
+        return <PlaylistCard 
+            playlist={p} 
+            select={props.select} 
+            selected={props.selected ? props.selected.id === p.id : false}
+            index={index + 1}
+            />;
     }) : null;
 
     return (
         <div>
-            <ListGroup>
-                {components}
-            </ListGroup>
+            <Row className="playlists-row row justify-content-around">
+                <div className="text-container">
+                    <h2>Playlists</h2>
+                </div>
+                
+                <ListGroup className="playlists-list col-8">
+                    {components}
+                </ListGroup>
+            </Row>
+            
         </div>
     );
 }
