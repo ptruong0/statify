@@ -4,9 +4,8 @@ import './styles.scss';
 import { Accordion } from 'react-bootstrap';
 
 const SongList = (props) => {
-    console.log(props.list);
     const components = props.list ? props.list.map((s, index) => {
-        return <Song track={s.track} index={index + 1}/>;
+        return <Song track={s.track} index={index + 1} audio={props.audioFeatures[index]} {...props}/>;
     }) : null;
     return (
         <div className="song-list">

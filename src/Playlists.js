@@ -19,7 +19,6 @@ import './styles.scss';
 
 const Playlists = (props) => {
     const components = props.list ? props.list.map((p, index) => {
-        console.log(p.name);
         // return <ListGroup.Item variant="success" action>{p.name}</ListGroup.Item>;
         return <PlaylistCard 
             playlist={p} 
@@ -33,7 +32,7 @@ const Playlists = (props) => {
         <div>
             <Row className="playlists-row row justify-content-around">
                 <div className="text-container">
-                    <h2>Playlists</h2>
+                    <h2>Your<br/>Playlists</h2>
                 </div>
                 
                 <ListGroup className="playlists-list col-8">

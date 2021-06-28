@@ -8,7 +8,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import Login from './Login';
 import Main from './Main';
-import Auth from './Auth';
+import Token from './Token';
 //const client_id = window.env.CLIENT_ID;
 
 
@@ -47,7 +47,7 @@ function App() {
 
   return (
     <div className="App">
-      {code ? <Main code={code} /> : <Login />}
+      {code ? <Token code={code} /> : <Login />}
     </div>
   );
 }

@@ -33,33 +33,59 @@ $spotify-green: #1DB954;
     }
 }
 
-.playlists-row {
-    width: 100vw;
-    margin: auto;
-    .text-container {
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
+.playlists-section {
+    padding-top: 5vh;
+    .playlists-row {
+        width: 100vw;
+        margin: auto;
+        .text-container {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
     }
-}
-
-.playlists-list {
-    text-align: left;
-    .playlist-card {
-        padding-left: 2vw;
+    .playlists-list {
+        text-align: left;
+        .playlist-card {
+            padding-left: 2vw;
+        }
     }
 }
 
 .stats-section {
-    padding-top: 2vh;
+    padding-top: 3vh;
+    width: 100vw;
     .song-list {
         text-align: left;
         margin: none;
-        padding-left: 5vw;
+        padding: 0 1vw;
         border: none;
+        .song-entry {
+            .song-clickable:hover {
+                color: $spotify-green;
+                cursor: pointer;
+            }
+            .song-info p {
+                margin: 0;
+            }
+            .no-lyric-msg {
+                margin-top: 20px;
+                color: red;
+            }
+        }
     }
     .song-accordion {
         padding-top: 1vh;
+    }
+    .song-column {
+        padding-top: 2vh;
+        overflow: scroll;
+        height: 100%;
+    }
+    .stat-column {
+        padding-top: 2vh;
+        overflow: scroll;
+        height: 100%;
     }
 }
 

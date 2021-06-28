@@ -1,17 +1,22 @@
 const express = require('express');
 const cors = require('cors');
+const axios = require('axios');
 const bodyParser = require('body-parser')
 const SpotifyWebApi = require('spotify-web-api-node');
 
+const generateStats = require('./generateStats');
+const fields = require('./fields');
+
 const app = express();
 app.use(cors());
-app.use(bodyParser.json());
+// app.use(bodyParser.json());
+app.use(bodyParser({ limit: '50mb' }));
 
 // call this endpoint after getting oauth code via login
 // pass code from client to server in order to obtain and send back the token
 app.post('/login', (req, res) => {
     const code = req.body.code;
-    console.log(code);
+    // console.log(code);
 
     // initialize object for later use using authentication 
     const spotifyApi = new SpotifyWebApi({
@@ -21,7 +26,7 @@ app.post('/login', (req, res) => {
     });
 
     spotifyApi.authorizationCodeGrant(code).then(data => {
-        console.log(data);
+        // console.log(data);
 
         // return tokens back to the client
         res.json({
@@ -47,7 +52,7 @@ app.post('/refresh', (req, res) => {
 
     spotifyApi.refreshAccessToken()
         .then((data) => {
-            console.log(data.body);
+            // console.log(data.body);
             res.json({
                 accessToken: data.body.access_token,
                 expiresIn: data.body.expires_in
@@ -78,7 +83,151 @@ app.get('/user', (req, res) => {
         });
 })
 
+app.get('/profilename', (req, res) => {
+    const accessToken = req.query.accessToken;
+    const baseURL = 'https://api.spotify.com/v1/me';
+    axios.get(baseURL, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            // setUsername(res.data.display_name);
+            res.json({
+                displayName: response.data.display_name
+            })
+        })
+        .catch(err => console.log(err));
+})
+
+app.get('/playlists', (req, res) => {
+    const accessToken = req.query.accessToken;
+    const baseURL = 'https://api.spotify.com/v1/me/playlists';
+    axios.get(baseURL, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            res.json({
+                playlists: response.data.items
+            })
+
+        })
+        .catch(err => console.log(err));
+})
+
+app.get('/getplaylist', (req, res) => {
+    const accessToken = req.query.accessToken;
+    const url = req.query.url;
+    axios.get(url, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then(response => {
+            res.json({
+                songs: response.data.tracks.items
+            })
+        })
+        .catch(err => console.log(err));
+})
+
+
+app.post('/audiofeatures', (req, res) => {
+    const accessToken = req.body.data.accessToken;
+    const url = req.body.data.url;
+    const selectedSongs = req.body.data.selectedSongs;
+
+    console.log(url, selectedSongs);
+    axios.get(url, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then((response) => {
+            const stats = generateStats(response.data.audio_features, selectedSongs);
+            let audioFeatures = [];
+            for (let i = 0; i < response.data.audio_features.length; i++) {
+                let obj = {};
+                for (let f of fields) {
+                    obj[f] = response.data.audio_features[i][f];
+                }
+                audioFeatures.push(obj);
+            }
+
+            res.json({
+                stats: stats,
+                audioFeatures: audioFeatures,
+            })
+        })
+        .catch(err => console.log(err));
+})
+
+
+app.get('/lyrics', (req, res) => {
+    const baseURL = "https://api.genius.com/";
+    const token = "YLPGEOOSKyH--P-F3EHHWFujtGE4qdcIQL9LBQR5hl1vSjfm2EBqad4Qom_HrgXa";
+
+    console.log(req.query);
+    const artist = req.query.artist;
+    const title = req.query.title;
+    console.log("... " + title + " " + artist);
+
+    const searchURL = `${baseURL}search?q=${artist} ${title}`;
+    axios.get(searchURL, {
+            headers: {
+                "Accept": "application/json",
+                "Authorization": "Bearer " + token,
+                "User-Agent": "CompuServe Classic/1.22",
+                "Host": "api.genius.com"
+            }
+        })
+        .then(result => {
+            console.log("=================================================")
+            console.log(result.data.response.hits[0]);
+            //return result.data.response.hits[0].result.path;
+
+            res.json({
+                path: result.data.response.hits[0].result.path
+            });
+        })
+        // .then(id => {
+        //     console.log(id + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
+        //     const lyricURL = `${baseURL}songs/${id}?text_format=plain`;
+
+    //     axios.get(lyricURL, {
+    //             headers: {
+    //                 "Accept": "application/json",
+    //                 "Authorization": "Bearer " + token,
+    //                 "User-Agent": "CompuServe Classic/1.22",
+    //                 "Host": "api.genius.com"
+    //             }
+    //         })
+    //         .then(obj => {
+    //             console.log(obj.data.response.song);
+    //         })
+    //         .catch(err => console.log(err));
+    // })
+    // .catch(err => console.log(""));
+    .catch(err => {
+        console.log(err);
+        res.json({
+            path: "ERROR"
+        })
+    });
+
+})
+
 app.listen(5000, () => console.log("Listening on port 5000..."));
 
-// to start server
+// to start server,
 // npm run start

@@ -13,6 +13,7 @@ const Login = () => {
           style={{ minHeight: "50vh" }}
         > */}
         <h1>How do you listen?</h1>
+        <h6>Lyrics, stats, and more</h6>
           <a className="btn btn-lg login-btn" href={AUTH_URL}>
             Login With Spotify
           </a>
