@@ -74,7 +74,7 @@ app.get('/user', (req, res) => {
     });
     spotifyApi.getMe()
         .then((data) => {
-            console.log('Some information about the authenticated user', data.body);
+            // console.log('Some information about the authenticated user', data.body);
             res.json({
                 user: data.body
             });
@@ -145,7 +145,7 @@ app.post('/audiofeatures', (req, res) => {
     const url = req.body.data.url;
     const selectedSongs = req.body.data.selectedSongs;
 
-    console.log(url, selectedSongs);
+    // console.log(url, selectedSongs);
     axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
@@ -177,10 +177,10 @@ app.get('/lyrics', (req, res) => {
     const baseURL = "https://api.genius.com/";
     const token = "YLPGEOOSKyH--P-F3EHHWFujtGE4qdcIQL9LBQR5hl1vSjfm2EBqad4Qom_HrgXa";
 
-    console.log(req.query);
+    // console.log(req.query);
     const artist = req.query.artist;
     const title = req.query.title;
-    console.log("... " + title + " " + artist);
+    // console.log("... " + title + " " + artist);
 
     const searchURL = `${baseURL}search?q=${artist} ${title}`;
     axios.get(searchURL, {
@@ -192,8 +192,8 @@ app.get('/lyrics', (req, res) => {
             }
         })
         .then(result => {
-            console.log("=================================================")
-            console.log(result.data.response.hits[0]);
+            // console.log("=================================================")
+            // console.log(result.data.response.hits[0]);
             //return result.data.response.hits[0].result.path;
 
             res.json({

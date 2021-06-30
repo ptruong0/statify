@@ -14,6 +14,8 @@ const generateStats = (audioFeatures, selectedSongs) => {
 
     let info = [];
 
+
+
     for (let i = 0; i < audioFeatures.length; i++) {
         const song = audioFeatures[i];
         info[i] = {};
@@ -37,6 +39,24 @@ const generateStats = (audioFeatures, selectedSongs) => {
         resultObject["min_" + f] = selectedSongs[minIndices[f]];
     }
     console.log(resultObject);
+
+
+    let artistFreq = {};
+    // store the number of times an artist appears in the playlist in frequency dict
+    for (let song of selectedSongs) {
+        for (let artist of song.track.artists) {
+            if (artist.name in artistFreq) {
+                artistFreq[artist.name]++;
+
+            } else {
+                artistFreq[artist.name] = 1;
+            }
+        }
+    }
+    // sort the artist keys in descending order and get the top 3 
+    let topArtists = Object.keys(artistFreq).sort((a, b) => artistFreq[a] < artistFreq[b] ? 1 : artistFreq[a] > artistFreq[b] ? -1 : 0).slice(0, 3);
+    resultObject["favoriteArtist"] = topArtists;
+    console.log(resultObject["favoriteArtist"]);
 
     return resultObject;
 }

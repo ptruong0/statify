@@ -8,6 +8,7 @@ import './styles.scss';
 import { useState, useEffect } from 'react';
 import { Row, Navbar } from 'react-bootstrap';
 import { Split } from '@geoffcox/react-splitter';
+import SplitPane, { Pane } from 'react-split-pane';
 import axios from 'axios';
 import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchLyrics, fetchProfileName } from './backendCalls';
 
@@ -130,28 +131,31 @@ const Main = (props) => {
                 </Navbar.Text>
             </Navbar>
 
-            <div className="playlists-section">
-                <Playlists list={playlists} select={selectPlaylist} selected={selected} />
-            </div>
-            {selected && audioFeatures ?
-                <div className="stats-section">
-                    <Split initialPrimarySize="33%">
-                        <div className="song-column">
-                            <h4>Selected Playlist: <strong>{selected.name}</strong></h4>
-                            <SongList list={selectedSongs} audioFeatures={audioFeatures} selectSong={selectSong} />
-                        </div>
-                        <Split>
-                            <div className="lyric-column">
-                                <LyricTab song={clickedSong} lyrics={lyrics} />
-                                {/* web scraping */}
-                            </div>
-                            <div className="stat-column">
-                                <StatTab stats={statsObject} />
-                            </div>
-                        </Split>
-                    </Split>
+            <div className="body" >
+                <div className="playlists-section">
+                    <Playlists list={playlists} select={selectPlaylist} selected={selected} />
                 </div>
-                : <h6>Select a playlist to get started!</h6>}
+
+                {selected && audioFeatures ?
+                    <div className="stats-section scroll-container">
+                        <Split initialPrimarySize="33%">
+                            <div className="song-column">
+                                <h4>Selected Playlist: <strong>{selected.name}</strong></h4>
+                                <SongList list={selectedSongs} audioFeatures={audioFeatures} selectSong={selectSong} />
+                            </div>
+                            <Split>
+                                <div className="lyric-column">
+                                    <LyricTab song={clickedSong} lyrics={lyrics} />
+                                    {/* web scraping */}
+                                </div>
+                                <div className="stat-column">
+                                    <StatTab stats={statsObject} />
+                                </div>
+                            </Split>
+                        </Split>
+                    </div>
+                    : <h6>Select a playlist to get started!</h6>}
+            </div>
         </div>
     )
 }

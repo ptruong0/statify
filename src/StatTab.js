@@ -6,6 +6,10 @@ import StatCard from './StatCard';
 const StatTab = (props) => {
     const statComponents = props.stats ? [
         <StatCard 
+            label="Favorite (Most Frequent) Artist"
+            list={props.stats.favoriteArtist}
+        />,
+        <StatCard 
             maxLabel="Most Danceable" 
             minLabel="Least Danceable" 
             maxSong={props.stats.max_danceability}
@@ -50,10 +54,13 @@ const StatTab = (props) => {
     ] : null;
 
     return (
-        <div >
+        <div className="stat-tab">
             <Tabs defaultActiveKey="stat" id="tabs">
                 <Tab eventKey="stat" title="Playlist Stats">
+                    <div className="stat-card-container">
                     {statComponents}
+
+                    </div>
                 </Tab>
                 
             </Tabs>

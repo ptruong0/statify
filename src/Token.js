@@ -20,7 +20,7 @@ const Token = (props) => {
         <div>
             {token ? 
             <Main token={token}/>
-            : null}
+            : <p><br />Server is not currently running at this time.</p>}
         </div>
     );
 }

@@ -1,4 +1,8 @@
 $spotify-green: #1DB954;
+p {
+    margin: 0;
+}
+
 .login-page {
     background-color: black;
     height: 100vh;
@@ -33,62 +37,94 @@ $spotify-green: #1DB954;
     }
 }
 
-.playlists-section {
-    padding-top: 5vh;
-    .playlists-row {
+.body {
+    background: #222222;
+    color: white;
+    .playlists-section {
+        padding-top: 5vh;
+        .playlists-row {
+            width: 100vw;
+            margin: auto;
+            .text-container {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+            }
+        }
+        .playlists-list {
+            text-align: left;
+            .playlist-card {
+                padding-left: 2vw;
+            }
+        }
+    }
+    .stats-section {
+        padding-top: 3vh;
         width: 100vw;
-        margin: auto;
-        .text-container {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-        }
-    }
-    .playlists-list {
-        text-align: left;
-        .playlist-card {
-            padding-left: 2vw;
-        }
-    }
-}
-
-.stats-section {
-    padding-top: 3vh;
-    width: 100vw;
-    .song-list {
-        text-align: left;
-        margin: none;
-        padding: 0 1vw;
-        border: none;
-        .song-entry {
-            .song-clickable:hover {
-                color: $spotify-green;
-                cursor: pointer;
-            }
-            .song-info p {
-                margin: 0;
-            }
-            .no-lyric-msg {
-                margin-top: 20px;
-                color: red;
+        .song-column {
+            padding-top: 2vh;
+            overflow: scroll;
+            height: 100%;
+            .song-list {
+                text-align: left;
+                margin: none;
+                padding: 0 1vw;
+                border: none;
+                .song-accordion {
+                    padding-top: 1vh;
+                }
+                .song-entry {
+                    .song-clickable,
+                    .song-info {
+                        background-color: #363636;
+                    }
+                    .song-clickable:hover {
+                        color: $spotify-green;
+                        cursor: pointer;
+                    }
+                    .no-lyric-msg {
+                        margin-top: 20px;
+                        color: red;
+                    }
+                }
             }
         }
-    }
-    .song-accordion {
-        padding-top: 1vh;
-    }
-    .song-column {
-        padding-top: 2vh;
-        overflow: scroll;
-        height: 100%;
-    }
-    .stat-column {
-        padding-top: 2vh;
-        overflow: scroll;
-        height: 100%;
+        .stat-column {
+            padding-top: 2vh;
+            overflow: scroll;
+            height: 100%;
+            .stat-card-container {
+                .stat-card {
+                    border: 1px solid white;
+                    border-radius: 10px;
+                    padding: 5px;
+                    margin: 10px 30px;
+                }
+            }
+        }
     }
 }
 
 ::-webkit-scrollbar {
     display: none;
+}
+
+.scroll-container {
+    display: flex;
+    overflow: hidden;
+    height: 100vh;
+    position: relative;
+    width: 100%;
+    backface-visibility: hidden;
+    will-change: overflow;
+}
+
+.song-column,
+.lyric-column,
+.stat-column {
+    overflow: auto;
+    height: auto;
+    padding: .5rem;
+    -webkit-overflow-scrolling: touch;
+    -ms-overflow-style: none;
 }
