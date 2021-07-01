@@ -2,6 +2,9 @@ const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const bodyParser = require('body-parser')
+const fetch = require('node-fetch');
+const cheerio = require('cheerio');
+const { parse, stringify } = require('flatted');
 const SpotifyWebApi = require('spotify-web-api-node');
 
 const generateStats = require('./generateStats');
@@ -195,10 +198,18 @@ app.get('/lyrics', (req, res) => {
             // console.log("=================================================")
             // console.log(result.data.response.hits[0]);
             //return result.data.response.hits[0].result.path;
+            scrapeLyrics('https://genius.com' + result.data.response.hits[0].result.path)
+                .then(value => {
+                    // value = stringify(value);
+                    console.log('.............................')
+                        // console.log(value);
+                    res.json({
+                        path: result.data.response.hits[0].result.path,
+                        lyricHTML: value,
+                    });
+                });
 
-            res.json({
-                path: result.data.response.hits[0].result.path
-            });
+
         })
         // .then(id => {
         //     console.log(id + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
@@ -226,6 +237,31 @@ app.get('/lyrics', (req, res) => {
     });
 
 })
+
+const scrapeLyrics = async(url) => {
+    console.log(url);
+
+    const res = await fetch(url);
+
+    const html = await res.text();
+    const $ = cheerio.load(html);
+    const lyricDiv = $('div.Lyrics__Container-sc-1ynbvzw-7');
+    console.log(lyricDiv);
+    let htmlElements = [];
+    // lyricDiv.each((i, elem) => {
+    //     // console.log(lyricDiv[i]);
+    //     htmlElements.push($.html(this));
+    // });
+    console.log(lyricDiv.toArray());
+    htmlElements = lyricDiv.toArray().map(x => {
+            return $.html(x);
+        })
+        // return $('div.Lyrics__Container-sc-1ynbvzw-7').text();
+        // return $('div.Lyrics__Container-sc-1ynbvzw-7').html();
+    return htmlElements;
+
+}
+
 
 app.listen(5000, () => console.log("Listening on port 5000..."));
 

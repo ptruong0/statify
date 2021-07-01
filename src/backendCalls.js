@@ -77,8 +77,8 @@ export const fetchLyrics = (title, artist, setFunc) => {
             }
         })
         .then(res => {
-            setFunc(res.data.path);
-
+            console.log(res.data);
+            setFunc(res.data);
         })
         .catch(err => console.log(err));
 }

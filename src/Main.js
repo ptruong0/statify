@@ -39,6 +39,11 @@ const Main = (props) => {
 
     const selectPlaylist = (p) => {
         setSelected(null);  // to clear previous playlist info
+        setClickedSong(null);
+        setSelectedSongs(null);
+        setAudioFeatures(null);
+        setStatsObject(null);
+        setLyrics(null);
         setSelected(p);
         console.log("selecting " + p.name);
 
@@ -84,27 +89,14 @@ const Main = (props) => {
 
     const renderLyrics = () => {
         if (lyrics) {
-            // console.log(lyrics);
+
+            console.log(lyrics);
             let card = document.querySelector(`#song-info-${clickedSong}`);
             if (lyrics === "ERROR") {
                 let msg = document.createElement('p');
                 msg.classList.add("no-lyric-msg")
                 msg.innerHTML = "Lyrics could not be found";
                 card.appendChild(msg);
-            }
-            else if (!document.querySelector("#lyric-link-" + clickedSong)) {
-                const geniusURL = 'https://genius.com';
-
-                let newLink = document.createElement('a');
-                newLink.setAttribute("href", geniusURL + lyrics);
-                newLink.setAttribute("target", "_blank");
-                newLink.setAttribute("id", "lyric-link-" + clickedSong);
-                newLink.classList.add("btn");
-                newLink.classList.add("btn-warning");
-
-                newLink.innerHTML = "Get lyrics here";
-
-                card.appendChild(newLink);
             }
         }
     }
@@ -143,9 +135,9 @@ const Main = (props) => {
                                 <h4>Selected Playlist: <strong>{selected.name}</strong></h4>
                                 <SongList list={selectedSongs} audioFeatures={audioFeatures} selectSong={selectSong} />
                             </div>
-                            <Split>
+                            <Split initialPrimarySize="50%">
                                 <div className="lyric-column">
-                                    <LyricTab song={clickedSong} lyrics={lyrics} />
+                                    <LyricTab song={selectedSongs[clickedSong]} lyrics={lyrics} />
                                     {/* web scraping */}
                                 </div>
                                 <div className="stat-column">

@@ -14,8 +14,8 @@ const StatCard = (props) => {
             </div>
             :
             <div>
-            <p><em>{props.maxLabel}</em>{": "}{props.maxSong.track.name}</p>
-            <p><em>{props.minLabel}</em>{": "}{props.minSong.track.name}</p>
+            <p><em>{props.maxLabel}</em>{": "}</p><p>{props.maxSong.track.name}</p>
+            <p><em>{props.minLabel}</em>{": "}</p><p>{props.minSong.track.name}</p>
             </div>
             }           
         </div>

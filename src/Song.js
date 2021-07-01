@@ -1,27 +1,10 @@
 import './styles.scss';
 import { Accordion, Card } from 'react-bootstrap';
+import { formatDuration, formatArtistList }from './helperFunctions';
 
 const Song = (props) => {
-    const formatDuration = (ms) => {
-        let str = "";
-        let totalSeconds = Math.round(ms / 1000);
-        let secs = totalSeconds % 60;
-        if (totalSeconds >= 60) {
-            let mins = Math.floor(totalSeconds / 60);
-            str += mins.toString() + " min ";
-            str += secs.toString() + " sec";
-        } else {
-            str += secs.toString() + " secs";
-        }
-        return str;
-    }
-
-    let artistList = "";
-    for (let artist of props.track.artists) {
-        artistList += artist.name;
-        artistList += ", ";
-    }
-    artistList = artistList.slice(0, -2);
+    
+    let artistList = formatArtistList(props.track.artists);
 
     const audioStats = props.audio ? Object.keys(props.audio).map((key) => {
         return <p>{key}: {props.audio[key]}</p>
