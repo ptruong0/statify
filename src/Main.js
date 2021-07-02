@@ -1,24 +1,22 @@
 import Auth from './Auth';
 import Playlists from './Playlists';
-import SongList from './SongList';
+import SongTab from './SongTab';
 import LyricTab from './LyricTab';
 import StatTab from './StatTab';
 import './styles.scss';
 
-import { useState, useEffect } from 'react';
-import { Row, Navbar } from 'react-bootstrap';
+import React, { useState, useEffect } from 'react';
+import { Row, Navbar, Button, Spinner, OverlayTrigger,  Tooltip } from 'react-bootstrap';
 import { Split } from '@geoffcox/react-splitter';
-import SplitPane, { Pane } from 'react-split-pane';
-import axios from 'axios';
 import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchLyrics, fetchProfileName } from './backendCalls';
 
 
-const backendURL = "http://localhost:5000";
 
 const Main = (props) => {
     const [username, setUsername] = useState(null);
     const [playlists, setPlaylists] = useState(null);
-    const [selected, setSelected] = useState(null);
+    const [selectedPlaylist, setSelectedPlaylist] = useState(null);
+    const [showPlaylists, setShowPlaylists] = useState(false);
     const [selectedSongs, setSelectedSongs] = useState(null);
     const [audioFeatures, setAudioFeatures] = useState(null);
     const [statsObject, setStatsObject] = useState(null);
@@ -38,16 +36,20 @@ const Main = (props) => {
 
 
     const selectPlaylist = (p) => {
-        setSelected(null);  // to clear previous playlist info
-        setClickedSong(null);
-        setSelectedSongs(null);
-        setAudioFeatures(null);
-        setStatsObject(null);
-        setLyrics(null);
-        setSelected(p);
-        console.log("selecting " + p.name);
+        if (p !== selectedPlaylist) {
+            setSelectedPlaylist(null);  // to clear previous playlist info
+            setClickedSong(null);
+            setSelectedSongs(null);
+            setAudioFeatures(null);
+            setStatsObject(null);
+            setLyrics(null);
+            setSelectedPlaylist(p);
+            setShowPlaylists(false);
+            console.log("selecting " + p.name);
 
-        fetchAPlaylist(props.token, p.href, setSelectedSongs);
+            fetchAPlaylist(props.token, p.href, setSelectedSongs);
+        }
+
     };
 
 
@@ -71,6 +73,7 @@ const Main = (props) => {
 
 
     const getLyrics = () => {
+        setLyrics(null);
         if (clickedSong != null) {
 
             const title = selectedSongs[clickedSong].track.name;
@@ -92,13 +95,21 @@ const Main = (props) => {
 
             console.log(lyrics);
             let card = document.querySelector(`#song-info-${clickedSong}`);
-            if (lyrics === "ERROR") {
-                let msg = document.createElement('p');
-                msg.classList.add("no-lyric-msg")
-                msg.innerHTML = "Lyrics could not be found";
-                card.appendChild(msg);
+            if (lyrics.path === "ERROR" && !lyrics.lyricHTML) {
+                setLyrics({
+                    path: "ERROR",
+                    lyricHTML: ["<p className=\"no-lyric-msg\">Lyrics could not be found<p>"]
+                });
+                // let msg = document.createElement('p');
+                // msg.classList.add("no-lyric-msg")
+                // msg.innerHTML = "Lyrics could not be found";
+                // card.appendChild(msg);
             }
         }
+    }
+
+    const toggleShowPlaylist = () => {
+        setShowPlaylists(!showPlaylists);
     }
 
 
@@ -110,43 +121,82 @@ const Main = (props) => {
 
     useEffect(renderLyrics, [lyrics]);
 
+    const loadingSpinner =
+        <div className="triple-spinners">
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+
+        </div>
+
+    const renderTooltip = props => (
+        <Tooltip {...props}>Note: This will briefly open a new window. You will need to log back in to view this page.</Tooltip>
+      );
 
     return (
         <div>
-            {/* <p>Logged in with code {props.code}</p> */}
-            <Navbar bg="dark" expand="lg" className="my-navbar justify-content-between">
-                <Navbar.Brand className="nav-text">
+
+            <Navbar expand="lg" className="my-navbar justify-content-between">
+                <Navbar.Brand className="nav-text nav-title">
                     Statify
                 </Navbar.Brand>
-                <Navbar.Text className="nav-text">
-                    Signed in as: {username}
-                </Navbar.Text>
+                <div className="nav-right">
+                    <Navbar.Text className="nav-text">
+                        Signed in as: {username}
+                    </Navbar.Text>
+                    <OverlayTrigger placement="bottom" overlay={renderTooltip}>
+                    <Button onClick={props.signOut} variant="outline-info" size="sm" data-rh="tooltip 1">Sign Out</Button>
+
+                    </OverlayTrigger>
+                        
+   
+                </div>
             </Navbar>
 
             <div className="body" >
-                <div className="playlists-section">
-                    <Playlists list={playlists} select={selectPlaylist} selected={selected} />
-                </div>
+                {!selectedPlaylist || showPlaylists ?
+                    <div className="playlists-section">
+                        <Playlists
+                            list={playlists}
+                            select={selectPlaylist}
+                            selected={selectedPlaylist}
+                            hide={toggleShowPlaylist}
+                            visible={showPlaylists}
+                        />
+                    </div>
+                    : null}
 
-                {selected && audioFeatures ?
+
+                {selectedPlaylist && audioFeatures ?
                     <div className="stats-section scroll-container">
-                        <Split initialPrimarySize="33%">
+                        <Split initialPrimarySize="33%" minPrimarySize="25%" minSecondarySize="50%">
                             <div className="song-column">
-                                <h4>Selected Playlist: <strong>{selected.name}</strong></h4>
-                                <SongList list={selectedSongs} audioFeatures={audioFeatures} selectSong={selectSong} />
+                                <SongTab playlist={selectedPlaylist.name} showPlaylists={showPlaylists} hideFunc={toggleShowPlaylist} selectedSongs={selectedSongs} audioFeatures={audioFeatures} selectSongFunc={selectSong} />
                             </div>
-                            <Split initialPrimarySize="50%">
-                                <div className="lyric-column">
-                                    <LyricTab song={selectedSongs[clickedSong]} lyrics={lyrics} />
-                                    {/* web scraping */}
-                                </div>
+                            <Split initialPrimarySize="50%" minPrimarySize="30%" minSecondarySize="30%">
                                 <div className="stat-column">
                                     <StatTab stats={statsObject} />
                                 </div>
+                                <div className="lyric-column">
+                                    <LyricTab song={selectedSongs[clickedSong]} lyrics={lyrics} songClicked={clickedSong !== null} />
+                                </div>
+
                             </Split>
                         </Split>
                     </div>
-                    : <h6>Select a playlist to get started!</h6>}
+                    : selectedPlaylist ? loadingSpinner : <h6>Select a playlist to get started!</h6>}
             </div>
         </div>
     )

@@ -1,25 +1,11 @@
 import React from 'react';
-import { ListGroup, Row } from 'react-bootstrap';
+import { ListGroup, Row, Button } from 'react-bootstrap';
 
 import PlaylistCard from './PlaylistCard';
 import './styles.scss';
 
-// const Playlists = (props) => {
-//     const components = props.list ? props.list.map((p) => {
-//         console.log(p.name);
-//         return <PlaylistCard playlist={p}/>;
-//     }) : null;
-
-//     return (
-//         <div>
-//             {components}
-//         </div>
-//     );
-// }
-
 const Playlists = (props) => {
     const components = props.list ? props.list.map((p, index) => {
-        // return <ListGroup.Item variant="success" action>{p.name}</ListGroup.Item>;
         return <PlaylistCard 
             playlist={p} 
             select={props.select} 
@@ -35,9 +21,14 @@ const Playlists = (props) => {
                     <h2>Your<br/>Playlists</h2>
                 </div>
                 
-                <ListGroup className="playlists-list col-8">
+                <div className="playlists-list col-6" >
                     {components}
-                </ListGroup>
+                </div>
+                {props.visible ?
+                <Button onClick={props.hide} size="md" variant="outline-info" className="show-playlists-btn">
+                    Hide 
+                </Button>
+                : null }
             </Row>
             
         </div>

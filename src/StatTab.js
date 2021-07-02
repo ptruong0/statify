@@ -55,8 +55,9 @@ const StatTab = (props) => {
 
     return (
         <div className="stat-tab">
+            <h5>Playlist Stats</h5>
             <Tabs defaultActiveKey="stat" id="tabs">
-                <Tab eventKey="stat" title="Playlist Stats">
+                <Tab eventKey="stat" title="Superlatives">
                     <div className="stat-card-container">
                     {statComponents}
 

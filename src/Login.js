@@ -1,4 +1,4 @@
-import { Container, Jumbotron } from 'react-bootstrap';
+import { Container, Jumbotron, Navbar } from 'react-bootstrap';
 import './styles.scss';
 
 const AUTH_URL =
@@ -6,20 +6,28 @@ const AUTH_URL =
 
 const Login = () => {
   return (
-    <div className="login-page">
-      <Jumbotron className="landing-jumbotron">
-        {/* <Container
+    <div>
+      <Navbar expand="lg" className="my-navbar justify-content-between">
+        <Navbar.Brand className="nav-text">
+          Statify
+        </Navbar.Brand>
+
+      </Navbar>
+      <div className="login-page">
+
+        <Jumbotron className="landing-jumbotron">
+          {/* <Container
           className="d-flex justify-content-center align-items-center"
           style={{ minHeight: "50vh" }}
         > */}
-        <h1>How do you listen?</h1>
-        <h6>Lyrics, stats, and more</h6>
-          <a className="btn btn-lg login-btn" href={AUTH_URL}>
-            Login With Spotify
+          <h1>How do you listen?</h1>
+          <h6>Lyrics, stats, and more</h6>
+          <a className="btn btn-lg login-btn btn-gradient" href={AUTH_URL}>
+            <p className="btn-text">Login With Spotify</p>
           </a>
-        {/* </Container> */}
-      </Jumbotron>
-    </div>
+          {/* </Container> */}
+        </Jumbotron>
+      </div></div>
   )
 }
 

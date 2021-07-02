@@ -1,10 +1,24 @@
 $spotify-green: #1DB954;
+$column-padding: 20px;
+$background-dark: hsl(228, 8%, 13%);
+// $stat-column-bg: #63A083;
+$song-column-bg: #2C6154;
+$stat-column-bg: #1C4242;
+$lyric-column-bg: #293B4B;
+* {
+    box-sizing: border-box;
+    margin: 0;
+    font-family: 'Montserrat', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
 p {
     margin: 0;
 }
 
 .login-page {
-    background-color: black;
+    background-color: $background-dark;
     height: 100vh;
     width: 100vw;
     padding: 25vh 0;
@@ -22,30 +36,60 @@ p {
     color: white;
     overflow-y: scroll;
     .login-btn {
-        border-radius: 3vh;
+        border-radius: 20px;
         padding: 2vh 2vw;
-        background-color: $spotify-green;
-        color: white;
+        // background-color: $spotify-green;
+        // color: white;
+        color: $spotify-green;
         margin-top: 19vh;
+        border: 2px solid white;
+    }
+    .login-btn:hover {
+        color: white;
     }
 }
 
 .my-navbar {
+    background-color: $background-dark;
+    // position: sticky;
+    top: 0;
+    z-index: 99;
+    height: 8vh;
     .nav-text {
         color: white;
+    }
+    .nav-title {
+        color: $spotify-green;
         text-align: center;
+    }
+    .nav-title:hover {
+        color: $spotify-green;
+        border-bottom: 2px solid white;
+    }
+    .nav-right {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .nav-text {
+            padding: 0 40px;
+        }
     }
 }
 
 .body {
-    background: #222222;
+    font-family: 'Montserrat', sans-serif;
+    background: $background-dark;
     color: white;
-    min-height: 92.5vh;
+    min-height: 92vh;
     .playlists-section {
-        padding-top: 5vh;
+        padding-top: 3vh;
+        padding-bottom: 3vh;
+        border-bottom: 2px solid green;
+        margin-bottom: 3vh;
         .playlists-row {
             width: 100vw;
             margin: auto;
+            align-items: center;
             .text-container {
                 display: flex;
                 flex-direction: column;
@@ -54,67 +98,119 @@ p {
         }
         .playlists-list {
             text-align: left;
+            width: 100px;
+            border-radius: 20px;
+            border: 3px solid white;
+            padding: 0;
+            background-color: $spotify-green;
             .playlist-card {
-                padding-left: 2vw;
+                padding: 2vh 2vw;
+                // background-color: $spotify-green;
+                background-color: #09973B;
+            }
+            .playlist-card:nth-child(2n) {
+                // background-color: #56BA79;
+                background-color: #35A95E;
+            }
+            .playlist-card:first-child {
+                border-radius: 20px 20px 0 0;
+            }
+            .playlist-card:last-child {
+                border-radius: 0 0 20px 20px;
+            }
+            .playlist-card:hover {
+                background-color: #B1EDC6;
+                color: $spotify-green;
+                font-weight: bold;
+                transition: 0.5s ease;
+                font-size: 1.1rem;
             }
         }
     }
     .stats-section {
-        padding-top: 3vh;
         width: 100vw;
+        height: 92vh;
         .song-column {
-            padding-top: 2vh;
+            background-image: linear-gradient(to top, $song-column-bg, $background-dark);
+            padding-top: $column-padding;
             overflow: scroll;
             height: 100%;
+            .playlist-title-row {
+                display: flex;
+                justify-content: space-around;
+                align-items: center;
+                padding: 5px 10px 10px 10px;
+                .show-playlists-btn {}
+                .playlist-title {
+                    display: inline;
+                }
+            }
             .song-list {
                 text-align: left;
                 margin: none;
-                padding: 0 1vw;
+                padding: 0 .5vw;
                 border: none;
                 .song-accordion {
                     padding-top: 1vh;
+                    border: none;
                 }
                 .song-entry {
                     .song-clickable,
                     .song-info {
                         background-color: black;
+                        // border: 5px solid $spotify-green;
+                        border: none;
                     }
                     .song-clickable:hover {
-                        color: $spotify-green;
+                        background-color: $spotify-green;
+                        transition: 0.4s ease;
                         cursor: pointer;
-                    }
-                    .no-lyric-msg {
-                        margin-top: 20px;
-                        color: red;
                     }
                 }
             }
         }
         .lyric-column {
-            padding-top: 2vh;
+            background-image: linear-gradient(to top, $lyric-column-bg 30%, $background-dark);
+            padding-top: $column-padding;
             overflow: scroll;
             height: 100%;
+            a {
+                color: yellow;
+            }
             .lyric-container {
                 a {
                     pointer-events: none;
                     color: white;
                 }
+                .no-lyric-msg {
+                    color: red;
+                }
             }
         }
         .stat-column {
-            padding-top: 2vh;
+            background-image: linear-gradient(to top, $stat-column-bg, $background-dark);
+            padding-top: $column-padding;
             overflow: scroll;
             height: 100%;
             .stat-card-container {
                 display: grid;
                 grid-template-columns: 1fr;
                 .stat-card {
+                    background: black;
                     border: 1px solid white;
                     border-radius: 50px;
                     padding: 5px;
                     margin: 10px 30px;
                 }
             }
+        }
+    }
+    .triple-spinners {
+        display: flex;
+        justify-content: center;
+        padding-top: 20px;
+        .spinner {
+            margin: 20px 30px;
         }
     }
 }
@@ -141,4 +237,30 @@ p {
     padding: .5rem;
     -webkit-overflow-scrolling: touch;
     -ms-overflow-style: none;
+}
+
+.btn-gradient {
+    position: relative;
+}
+
+.btn-gradient:after {
+    position: absolute;
+    content: '';
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 100%;
+    background: $spotify-green;
+    transition: all 0.5s;
+    border-radius: 20px;
+    z-index: 0;
+}
+
+.btn-gradient:hover:after {
+    width: 100%;
+}
+
+.btn-text {
+    position: relative;
+    z-index: 40;
 }

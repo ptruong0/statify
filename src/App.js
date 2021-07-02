@@ -13,28 +13,30 @@ import Token from './Token';
 
 
 function App() {
-  const credentials = ApiKey();
-  // const [code, setCode] = useState('');
+  const [signedIn, setSignedIn] = useState(false)
+  const [code, setCode] = useState(null);
   // const [token, setToken] = useState('');
-/*
+  /*
+    useEffect(() => {
+      axios('https://accounts.spotify.com/api/token', {
+        headers: {
+          'Content-Type' : 'application/x-www-form-urlencoded',
+          'Authorization' : 'Basic ' + btoa(credentials.clientId + ':' + credentials.clientSecret)      
+        },
+        data: 'grant_type=client_credentials',
+        method: 'POST'
+      })
+      .then(tokenRes => {
+        console.log(tokenRes);
+        setToken(tokenRes.data.acess_token);
+  
+      });
+    }, []);
+    */
   useEffect(() => {
-    axios('https://accounts.spotify.com/api/token', {
-      headers: {
-        'Content-Type' : 'application/x-www-form-urlencoded',
-        'Authorization' : 'Basic ' + btoa(credentials.clientId + ':' + credentials.clientSecret)      
-      },
-      data: 'grant_type=client_credentials',
-      method: 'POST'
-    })
-    .then(tokenRes => {
-      console.log(tokenRes);
-      setToken(tokenRes.data.acess_token);
-
-    });
+    const credentials = ApiKey();
+    setCode(new URLSearchParams(window.location.search).get("code"));
   }, []);
-  */
-
-  const code = new URLSearchParams(window.location.search).get("code");
   // const token = code ? Auth(code) : null;
   // console.log(token);
   // useState(() => {
@@ -43,11 +45,29 @@ function App() {
   //     setToken(Auth(code));
   //   }
   // }, [code])
-  
+
+  useEffect(() => {
+    if (code) {
+      setSignedIn(true);
+
+    }
+  }, [code]);
+
+  const signOut = () => {
+    // open up a Spotify logout window
+    const url = 'https://www.spotify.com/logout/'
+    const spotifyLogoutWindow = window.open(url, 'Spotify Logout', 'width=10,height=10,top=4000,left=4000')
+    setTimeout(() => spotifyLogoutWindow.close(), 500);
+
+    setSignedIn(false);
+    setCode(null);
+  }
+
 
   return (
     <div className="App">
-      {code ? <Token code={code} /> : <Login />}
+      {code && signedIn ? <Token code={code} signOut={signOut} /> : <Login />}
+
     </div>
   );
 }

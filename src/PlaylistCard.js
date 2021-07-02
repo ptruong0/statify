@@ -12,14 +12,14 @@ const PlaylistCard = (props) => {
     // );
     
     return (
-        <ListGroup.Item variant="success" action className="playlist-card"
+        <div className="playlist-card"
             onClick={() => {console.log(props.playlist); props.select(props.playlist);}}>
                 <span style={{paddingRight: "20px"}}>{props.index}.</span>
                 {props.selected ? 
                  <strong>{props.playlist.name}</strong>
                  :
                 props.playlist.name}
-        </ListGroup.Item>
+        </div>
     );
 }
 
