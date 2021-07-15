@@ -1,5 +1,5 @@
 import Song from './Song';
-import './styles.scss';
+import '../styles.scss';
 
 import { Accordion } from 'react-bootstrap';
 

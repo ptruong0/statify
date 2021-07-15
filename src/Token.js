@@ -1,8 +1,7 @@
 import Main from './Main';
-import Auth from './Auth';
+import Auth from './functions/Auth';
 
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 
 const Token = (props) => {
     const [token, setToken] = useState(null);

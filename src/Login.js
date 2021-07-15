@@ -1,4 +1,6 @@
-import { Container, Jumbotron, Navbar } from 'react-bootstrap';
+import frogGraphic from './assets/frog.png';
+
+import { Jumbotron, Navbar } from 'react-bootstrap';
 import './styles.scss';
 
 const AUTH_URL =
@@ -14,7 +16,6 @@ const Login = () => {
 
       </Navbar>
       <div className="login-page">
-
         <Jumbotron className="landing-jumbotron">
           {/* <Container
           className="d-flex justify-content-center align-items-center"
@@ -27,7 +28,10 @@ const Login = () => {
           </a>
           {/* </Container> */}
         </Jumbotron>
-      </div></div>
+        <img src={frogGraphic} alt=""  className="frog-img"/>
+        
+      </div>
+    </div>
   )
 }
 

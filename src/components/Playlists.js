@@ -1,8 +1,8 @@
 import React from 'react';
-import { ListGroup, Row, Button } from 'react-bootstrap';
+import { Row, Button } from 'react-bootstrap';
 
 import PlaylistCard from './PlaylistCard';
-import './styles.scss';
+import '../styles.scss';
 
 const Playlists = (props) => {
     const components = props.list ? props.list.map((p, index) => {

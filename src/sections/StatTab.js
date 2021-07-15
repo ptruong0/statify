@@ -1,7 +1,7 @@
 import React from 'react';
 import { Tabs, Tab } from 'react-bootstrap';
 
-import StatCard from './StatCard';
+import StatCard from '../components/StatCard';
 
 const StatTab = (props) => {
     const statComponents = props.stats ? [

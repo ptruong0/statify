@@ -1,5 +1,5 @@
 
-import { formatArtistList } from './helperFunctions';
+import { formatArtistList } from '../functions/helperFunctions';
 
 import { Spinner } from 'react-bootstrap';
 

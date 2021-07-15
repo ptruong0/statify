@@ -19,34 +19,49 @@ p {
 }
 
 .login-page {
-    background-color: $background-dark;
-    height: 100vh;
-    width: 100vw;
-    padding: 25vh 0;
-}
-
-.landing-jumbotron {
-    max-width: 50vw;
-    height: 50vh;
-    text-align: center;
-    padding-top: 5vh;
-    border-radius: 5vw;
-    margin: auto;
+    // background-color: $background-dark;
     background-color: black;
-    border: 3px solid $spotify-green;
-    color: white;
-    overflow-y: scroll;
-    .login-btn {
-        border-radius: 20px;
-        padding: 2vh 2vw;
-        // background-color: $spotify-green;
-        // color: white;
-        color: $spotify-green;
-        margin-top: 19vh;
-        border: 2px solid white;
-    }
-    .login-btn:hover {
+    height: 92vh;
+    width: 100vw;
+    // padding: 25vh 0;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    .landing-jumbotron {
+        min-width: 25vw;
+        width: 40vw;
+        max-width: 75vw;
+        height: 50vh;
+        text-align: center;
+        border-radius: 5vw;
+        // margin-top: 10vh;
+        padding: 5vh 0 0 0;
+        // background-color: rgb(19, 14, 14);
+        background-color: black;
+        border: 3px solid $spotify-green;
         color: white;
+        overflow-y: scroll;
+        box-shadow: 0 0 30px rgba(255, 255, 255, .5);
+        .login-btn {
+            border-radius: 5vw;
+            padding: 2vh 2vw;
+            // background-color: $spotify-green;
+            // color: white;
+            color: $spotify-green;
+            margin-top: 19vh;
+            border: 2px solid white;
+        }
+        .login-btn:hover {
+            color: white;
+        }
+        &:hover {
+            text-shadow: 0 0 5px white;
+        }
+    }
+    .frog-img {
+        width: 600px;
+        height: 280px;
+        margin-top: 45vh
     }
 }
 
@@ -135,6 +150,7 @@ p {
             background-image: linear-gradient(to top, $song-column-bg, $background-dark);
             padding-top: $column-padding;
             overflow: auto;
+            text-align: center;
             height: 100%;
             .playlist-title-row {
                 display: flex;
@@ -175,6 +191,7 @@ p {
             padding-top: $column-padding;
             overflow: auto;
             height: 100%;
+            text-align: center;
             a {
                 color: yellow;
             }
@@ -192,6 +209,7 @@ p {
             background-image: linear-gradient(to top, $stat-column-bg, $background-dark);
             padding-top: $column-padding;
             overflow: auto;
+            text-align: center;
             height: 100%;
             .stat-card-container {
                 display: grid;

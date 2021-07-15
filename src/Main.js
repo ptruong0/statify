@@ -1,14 +1,15 @@
-import Auth from './Auth';
-import Playlists from './Playlists';
-import SongTab from './SongTab';
-import LyricTab from './LyricTab';
-import StatTab from './StatTab';
+import Auth from './functions/Auth';
+import Playlists from './components/Playlists';
+import SongTab from './sections/SongTab';
+import LyricTab from './sections/LyricTab';
+import StatTab from './sections/StatTab';
+import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName } from './functions/backendCalls';
 import './styles.scss';
 
 import React, { useState, useEffect } from 'react';
 import { Row, Navbar, Button, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Split } from '@geoffcox/react-splitter';
-import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName } from './backendCalls';
+
 
 
 
@@ -202,7 +203,7 @@ const Main = (props) => {
                             </Split>
                         </Split>
                     </div>
-                    : selectedPlaylist ? loadingSpinner : <h6>Select a playlist to get started!</h6>}
+                    : selectedPlaylist ? loadingSpinner : <h6 className="text-center">Select a playlist to get started!</h6>}
             </div>
         </div>
     )

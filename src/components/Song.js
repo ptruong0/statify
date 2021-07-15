@@ -1,6 +1,6 @@
-import './styles.scss';
+import '../styles.scss';
 import { Accordion, Card } from 'react-bootstrap';
-import { formatDuration, formatArtistList }from './helperFunctions';
+import { formatDuration, formatArtistList }from '../functions/helperFunctions';
 
 const Song = (props) => {
     

@@ -1,6 +1,6 @@
 import React from 'react';
 import { ListGroup } from 'react-bootstrap';
-import './styles.scss';
+import '../styles.scss';
 
 
 const PlaylistCard = (props) => {

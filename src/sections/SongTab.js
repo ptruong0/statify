@@ -1,4 +1,4 @@
-import SongList from "./SongList";
+import SongList from "../components/SongList";
 
 import { Button } from 'react-bootstrap';
 
