@@ -6,9 +6,9 @@ import StatTab from './StatTab';
 import './styles.scss';
 
 import React, { useState, useEffect } from 'react';
-import { Row, Navbar, Button, Spinner, OverlayTrigger,  Tooltip } from 'react-bootstrap';
+import { Row, Navbar, Button, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Split } from '@geoffcox/react-splitter';
-import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchLyrics, fetchProfileName } from './backendCalls';
+import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName } from './backendCalls';
 
 
 
@@ -47,27 +47,34 @@ const Main = (props) => {
             setShowPlaylists(false);
             console.log("selecting " + p.name);
 
-            fetchAPlaylist(props.token, p.href, setSelectedSongs);
+            fetchAPlaylist(props.token, p.href)
+                .then(result => {
+                    console.log(result);
+                    setSelectedSongs(result);
+                });
+
         }
 
     };
 
 
     const getAudioFeatures = () => {
+        console.log(selectedSongs);
         if (selectedSongs) {
             // put song ids into a list to be passed into audio features query
-            let ids = "";
-            for (let s of selectedSongs) {
-                ids += s.track.id + ",";
-            }
 
-            if (ids.length > 0) {
-                ids = ids.slice(0, -1);
-                let url = "https://api.spotify.com/v1/audio-features?ids=";
-                url += ids;
+            fetchAudioFeatures(props.token, selectedSongs, setAudioFeatures)
+            .then(result => {
+                console.log(result);
+                setAudioFeatures(result);
+            });
+        }
 
-                fetchAudioFeatures(props.token, url, selectedSongs, setAudioFeatures, setStatsObject);
-            }
+    }
+
+    const getStats = () => {
+        if (audioFeatures && selectedSongs) {
+            fetchStats(audioFeatures, selectedSongs, setStatsObject)
         }
     }
 
@@ -117,6 +124,8 @@ const Main = (props) => {
 
     useEffect(getAudioFeatures, [selectedSongs]);
 
+    useEffect(getStats, [audioFeatures]);
+
     useEffect(getLyrics, [clickedSong]);
 
     useEffect(renderLyrics, [lyrics]);
@@ -143,7 +152,7 @@ const Main = (props) => {
 
     const renderTooltip = props => (
         <Tooltip {...props}>Note: This will briefly open a new window. You will need to log back in to view this page.</Tooltip>
-      );
+    );
 
     return (
         <div>
@@ -157,11 +166,8 @@ const Main = (props) => {
                         Signed in as: {username}
                     </Navbar.Text>
                     <OverlayTrigger placement="bottom" overlay={renderTooltip}>
-                    <Button onClick={props.signOut} variant="outline-info" size="sm" data-rh="tooltip 1">Sign Out</Button>
-
+                        <Button onClick={props.signOut} variant="outline-info" size="sm" data-rh="tooltip 1">Sign Out</Button>
                     </OverlayTrigger>
-                        
-   
                 </div>
             </Navbar>
 

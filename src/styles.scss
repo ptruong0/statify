@@ -11,6 +11,7 @@ $lyric-column-bg: #293B4B;
     font-family: 'Montserrat', sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    overflow: auto;
 }
 
 p {
@@ -133,7 +134,7 @@ p {
         .song-column {
             background-image: linear-gradient(to top, $song-column-bg, $background-dark);
             padding-top: $column-padding;
-            overflow: scroll;
+            overflow: auto;
             height: 100%;
             .playlist-title-row {
                 display: flex;
@@ -172,7 +173,7 @@ p {
         .lyric-column {
             background-image: linear-gradient(to top, $lyric-column-bg 30%, $background-dark);
             padding-top: $column-padding;
-            overflow: scroll;
+            overflow: auto;
             height: 100%;
             a {
                 color: yellow;
@@ -190,7 +191,7 @@ p {
         .stat-column {
             background-image: linear-gradient(to top, $stat-column-bg, $background-dark);
             padding-top: $column-padding;
-            overflow: scroll;
+            overflow: auto;
             height: 100%;
             .stat-card-container {
                 display: grid;
@@ -201,6 +202,11 @@ p {
                     border-radius: 50px;
                     padding: 5px;
                     margin: 10px 30px;
+                    .stat-label {
+                        color: #81ca9a;
+                        padding-top: 5px;
+                        padding-bottom: 3px;
+                    }
                 }
             }
         }
@@ -221,22 +227,21 @@ p {
 
 .scroll-container {
     display: flex;
-    overflow: hidden;
+    overflow: auto;
     height: 100vh;
     position: relative;
     width: 100%;
-    backface-visibility: hidden;
     will-change: overflow;
 }
 
 .song-column,
 .lyric-column,
 .stat-column {
-    overflow: auto;
+    overflow-y: scroll;
     height: auto;
     padding: .5rem;
-    -webkit-overflow-scrolling: touch;
-    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: auto;
+    // -ms-overflow-style: none;
 }
 
 .btn-gradient {
@@ -263,4 +268,15 @@ p {
 .btn-text {
     position: relative;
     z-index: 40;
+}
+
+::-webkit-scrollbar {
+    -webkit-appearance: none;
+    width: 7px;
+}
+
+ ::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background-color: rgba(0, 0, 0, .5);
+    box-shadow: 0 0 1px rgba(255, 255, 255, .5);
 }

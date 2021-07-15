@@ -21,6 +21,7 @@ const LyricTab = (props) => {
             if (html.length > 1) {
                 for (let i = 0; i < html.length; i++) {
                     lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[i] }}></div>)
+                    lyricComponents.push(<br/>)
                 }
             } else {
                 lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[0] }}></div>)

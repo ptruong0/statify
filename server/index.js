@@ -126,27 +126,34 @@ app.get('/playlists', (req, res) => {
 
 app.get('/getplaylist', (req, res) => {
     const accessToken = req.query.accessToken;
-    const url = req.query.url;
+    let url = req.query.url;
+    const offset = req.query.offset;
+
+    url += `/tracks?offset=${offset}`;
+
+    console.log("offset: " + offset);
     axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
                 "Accept": "application/json",
-                "Content-Type": "application/json"
+                "Content-Type": "application/json",
+                "offset": offset
             }
         })
         .then(response => {
+            console.log(response.data.items);
             res.json({
-                songs: response.data.tracks.items
+                songs: response.data.items
             })
         })
         .catch(err => console.log(err));
 })
 
 
-app.post('/audiofeatures', (req, res) => {
-    const accessToken = req.body.data.accessToken;
-    const url = req.body.data.url;
-    const selectedSongs = req.body.data.selectedSongs;
+app.get('/audiofeatures', (req, res) => {
+    const accessToken = req.query.accessToken;
+    const url = req.query.url;
+    // const selectedSongs = req.body.data.selectedSongs;
 
     // console.log(url, selectedSongs);
     axios.get(url, {
@@ -157,7 +164,7 @@ app.post('/audiofeatures', (req, res) => {
             }
         })
         .then((response) => {
-            const stats = generateStats(response.data.audio_features, selectedSongs);
+            console.log(response.data.audio_features);
             let audioFeatures = [];
             for (let i = 0; i < response.data.audio_features.length; i++) {
                 let obj = {};
@@ -168,7 +175,7 @@ app.post('/audiofeatures', (req, res) => {
             }
 
             res.json({
-                stats: stats,
+                // stats: stats,
                 audioFeatures: audioFeatures,
             })
         })
@@ -176,14 +183,24 @@ app.post('/audiofeatures', (req, res) => {
 })
 
 
+app.post('/audiostats', (req, res) => {
+    const audioFeatures = req.body.data.audioFeatures;
+    const selectedSongs = req.body.data.selectedSongs;
+
+    const stats = generateStats(audioFeatures, selectedSongs);
+    res.json({
+        stats: stats
+    })
+})
+
+
+
 app.get('/lyrics', (req, res) => {
     const baseURL = "https://api.genius.com/";
     const token = "YLPGEOOSKyH--P-F3EHHWFujtGE4qdcIQL9LBQR5hl1vSjfm2EBqad4Qom_HrgXa";
 
-    // console.log(req.query);
     const artist = req.query.artist;
     const title = req.query.title;
-    // console.log("... " + title + " " + artist);
 
     const searchURL = `${baseURL}search?q=${artist} ${title}`;
     axios.get(searchURL, {
@@ -195,48 +212,27 @@ app.get('/lyrics', (req, res) => {
             }
         })
         .then(result => {
-            // console.log("=================================================")
-            // console.log(result.data.response.hits[0]);
-            //return result.data.response.hits[0].result.path;
+
             scrapeLyrics('https://genius.com' + result.data.response.hits[0].result.path)
                 .then(value => {
                     // value = stringify(value);
                     console.log('.............................')
-                        // console.log(value);
+                    console.log(value);
                     res.json({
                         path: result.data.response.hits[0].result.path,
                         lyricHTML: value,
                     });
                 });
-
-
         })
-        // .then(id => {
-        //     console.log(id + "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~")
-        //     const lyricURL = `${baseURL}songs/${id}?text_format=plain`;
 
-    //     axios.get(lyricURL, {
-    //             headers: {
-    //                 "Accept": "application/json",
-    //                 "Authorization": "Bearer " + token,
-    //                 "User-Agent": "CompuServe Classic/1.22",
-    //                 "Host": "api.genius.com"
-    //             }
-    //         })
-    //         .then(obj => {
-    //             console.log(obj.data.response.song);
-    //         })
-    //         .catch(err => console.log(err));
-    // })
-    // .catch(err => console.log(""));
     .catch(err => {
         console.log(err);
         res.json({
             path: "ERROR"
         })
     });
-
 })
+
 
 const scrapeLyrics = async(url) => {
     console.log(url);
@@ -245,21 +241,18 @@ const scrapeLyrics = async(url) => {
 
     const html = await res.text();
     const $ = cheerio.load(html);
-    const lyricDiv = $('div.Lyrics__Container-sc-1ynbvzw-7');
-    console.log(lyricDiv);
+    const lyricDiv = $('div.Lyrics__Container-sc-1ynbvzw-8');
+    // console.log(lyricDiv);
+    // console.log(lyricDiv.html())
     let htmlElements = [];
-    // lyricDiv.each((i, elem) => {
-    //     // console.log(lyricDiv[i]);
-    //     htmlElements.push($.html(this));
-    // });
+
     console.log(lyricDiv.toArray());
     htmlElements = lyricDiv.toArray().map(x => {
-            return $.html(x);
-        })
-        // return $('div.Lyrics__Container-sc-1ynbvzw-7').text();
-        // return $('div.Lyrics__Container-sc-1ynbvzw-7').html();
-    return htmlElements;
+        console.log(x);
+        return $.html(x);
+    })
 
+    return htmlElements;
 }
 
 

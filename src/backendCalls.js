@@ -32,36 +32,118 @@ export const fetchAllPlaylists = (token, setFunc) => {
         .catch(err => console.log(err));
 }
 
-export const fetchAPlaylist = (token, url, setFunc) => {
-    axios.get(backendURL + "/getplaylist", {
+const get100Songs = async(offset, token, url) => {
+    let list = [];
+    await axios.get(backendURL + "/getplaylist", {
             headers: {
                 "Content-Type": "application/json"
             },
             params: {
                 accessToken: token,
-                url: url
+                url: url,
+                offset: offset
             }
         })
         .then((res) => {
-            setFunc(res.data.songs);
+            console.log(res.data.songs);
+            // setFunc(res.data.songs);
+            list = res.data.songs;
         })
-        .catch(err => console.log(err));
+
+    .catch(err => console.log(err));
+    return list;
 }
 
-export const fetchAudioFeatures = (token, url, selectedSongs, setFunc, setStats) => {
-    axios.post(backendURL + "/audiofeatures", {
+export const fetchAPlaylist = async(token, url) => {
+    let fullList = [];
+    let offset = 0;
+    let isComplete = false;
+
+    while (!isComplete) {
+        await get100Songs(offset, token, url)
+            .then(result => {
+                console.log(result);
+                if (result.length < 100) {
+                    isComplete = true;
+                }
+                fullList.push(...result)
+                offset += 100;
+            })
+    }
+
+    console.log(fullList.length, "!!!!");
+    console.log(fullList);
+    return fullList;
+}
+
+const get100Audio = async(token, url) => {
+
+    let list = [];
+
+    await axios.get(backendURL + "/audiofeatures", {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            params: {
+                accessToken: token,
+                url: url,
+                // selectedSongs: selectedSongs
+            },
+        })
+        .then((res) => {
+            list = res.data.audioFeatures;
+        })
+        .catch(err => console.log(err));
+    return list;
+}
+
+export const fetchAudioFeatures = async(token, selectedSongs) => {
+    let idList = selectedSongs.map((s) => {
+        return s.track.id;
+    })
+    let url = "";
+    let allAudio = [];
+
+    while (idList.length > 0) {
+        let ids = "";
+        let count = 0;
+        for (let s of idList) {
+            ids += s + ","; // accumulate id's in a string 100 at a time
+            count++;
+            if (count == 100) {
+                break;
+            }
+        }
+        if (count >= idList.length) {
+            idList = [];
+        } else {
+            idList = idList.slice(count);
+        }
+
+        ids = ids.slice(0, -1);
+        url = "https://api.spotify.com/v1/audio-features?ids=";
+        url += ids;
+
+        await get100Audio(token, url)
+            .then(result => {
+                allAudio.push(...result);
+            })
+    }
+    return allAudio;
+}
+
+export const fetchStats = (audio, selectedSongs, setFunc) => {
+    axios.post(backendURL + "/audiostats", {
             headers: {
                 "Content-Type": "application/json"
             },
             data: {
-                accessToken: token,
-                url: url,
+                audioFeatures: audio,
                 selectedSongs: selectedSongs
-            },
+            }
         })
-        .then((res) => {
-            setStats(res.data.stats);
-            setFunc(res.data.audioFeatures);
+        .then(res => {
+            setFunc(res.data.stats);
         })
         .catch(err => console.log(err));
 }
