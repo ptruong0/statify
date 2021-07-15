@@ -203,7 +203,7 @@ const Main = (props) => {
                             </Split>
                         </Split>
                     </div>
-                    : selectedPlaylist ? loadingSpinner : <h6 className="text-center">Select a playlist to get started!</h6>}
+                    : selectedPlaylist ? loadingSpinner : <h6>Select a playlist to get started!</h6>}
             </div>
         </div>
     )
