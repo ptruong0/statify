@@ -8,10 +8,10 @@ const StatCard = (props) => {
             // for statistics with a list e.g. top 3
             <div>
             <p className="stat-label"><em>{props.label}{": "}</em></p>
-            <p>{props.list.map((x, index) => {
+            <div>{props.list.map((x, index) => {
                 return <p>{index + 1}. {x}</p>
                 })}
-            </p>
+            </div>
             </div>
             :
             // for statistics with a most and least superlative

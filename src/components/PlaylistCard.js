@@ -12,7 +12,7 @@ const PlaylistCard = (props) => {
     // );
     
     return (
-        <div className="playlist-card"
+        <div className="playlist-card cursor-hover"
             onClick={() => {console.log(props.playlist); props.select(props.playlist);}}>
                 <span style={{paddingRight: "20px"}}>{props.index}.</span>
                 {props.selected ? 

@@ -194,7 +194,7 @@ const Main = (props) => {
                             </div>
                             <Split initialPrimarySize="50%" minPrimarySize="30%" minSecondarySize="30%">
                                 <div className="stat-column">
-                                    <StatTab stats={statsObject} />
+                                    <StatTab stats={statsObject} selectedSongs={selectedSongs}/>
                                 </div>
                                 <div className="lyric-column">
                                     <LyricTab song={selectedSongs[clickedSong]} lyrics={lyrics} songClicked={clickedSong !== null} />

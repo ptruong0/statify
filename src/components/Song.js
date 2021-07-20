@@ -1,9 +1,9 @@
 import '../styles.scss';
 import { Accordion, Card } from 'react-bootstrap';
-import { formatDuration, formatArtistList }from '../functions/helperFunctions';
+import { formatDuration, formatArtistList } from '../functions/helperFunctions';
 
 const Song = (props) => {
-    
+
     let artistList = formatArtistList(props.track.artists);
 
     const audioStats = props.audio ? Object.keys(props.audio).map((key) => {
@@ -13,7 +13,12 @@ const Song = (props) => {
     return (
         <div className="song-entry">
             <Card>
-                <Accordion.Toggle as={Card.Header} eventKey={props.index} className="song-clickable" onClick={() => {props.selectSong(props.index - 1)}}>
+                <Accordion.Toggle
+                    as={Card.Header}
+                    eventKey={props.index}
+                    className="song-clickable cursor-hover"
+                    onClick={() => { props.selectSong(props.index - 1) }}
+                >
                     <span>
                         {props.index} {". "}
                         <strong>{props.track.name}</strong> {" "}

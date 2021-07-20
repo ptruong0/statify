@@ -309,7 +309,6 @@ p {
                     .song-clickable:hover {
                         background-color: $spotify-green;
                         transition: 0.4s ease;
-                        cursor: pointer;
                     }
                 }
             }
@@ -345,7 +344,7 @@ p {
                 .stat-card {
                     background: black;
                     border: 1px solid white;
-                    border-radius: 50px;
+                    border-radius: 30px;
                     padding: 5px;
                     margin: 10px 30px;
                     .stat-label {
@@ -354,6 +353,15 @@ p {
                         padding-bottom: 3px;
                     }
                 }
+            }
+            .chart-title {
+                margin: 20px 0 10px 0;
+            }
+            .bar-chart {
+                color: #81ca9a;
+            }
+            a {
+                color: #2cceb8;
             }
         }
     }
@@ -425,4 +433,8 @@ p {
     border-radius: 4px;
     background-color: rgba(0, 0, 0, .5);
     box-shadow: 0 0 1px rgba(255, 255, 255, .5);
+}
+
+.cursor-hover:hover {
+    cursor: pointer;
 }
