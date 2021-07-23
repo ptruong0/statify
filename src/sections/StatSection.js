@@ -5,8 +5,7 @@ import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, BarChart, XAxis, Y
 import StatCard from '../components/StatCard';
 
 
-
-const StatTab = (props) => {
+const StatSection= (props) => {
 
     const artistDataToGraph = (songs) => {
         let freq = {};
@@ -50,7 +49,7 @@ const StatTab = (props) => {
     }
 
     const artistData = props.selectedSongs ? artistDataToGraph(props.selectedSongs) : null;
-    const genreData = props.genres ? genreDataToGraph(props.genres) : null;
+    const genreData = props.stats ? genreDataToGraph(props.stats.allGenres) : null;
 
     const statComponents = props.stats ? [
         <StatCard
@@ -119,72 +118,68 @@ const StatTab = (props) => {
                     
                     {artistData && genreData ?
                         <div style={{ height: artistData.length * 25, width: "100%", color: "#81ca9a" }}>
-                            <p className="chart-title">Artist Frequency in Playlist</p>
-                            <ResponsiveContainer width="100%" height="100%">
-                                {/* <PieChart width={400} height={400} className="piechart">
-                                    <Pie
-                                        dataKey="value"
-                                        isAnimationActive={false}
-                                        data={chartData}
-                                        cx="50%"
-                                        cy="50%"
-                                        outerRadius={80}
-                                        fill="#8884d8"
-                                        startAngle={90}
-                                        endAngle={450}
-                                    />
-                                    <Tooltip />
-                                </PieChart> */}
-                                
-                                <BarChart
-                                    width={600}
-                                    height={500}
-                                    data={artistData}
-                                    layout="vertical"
-                                    barSize={20}
-                                    margin={{
-                                        top: 5,
-                                        right: 20,
-                                        left: 40,
-                                        bottom: 5,
-                                    }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis type="number"/>
-                                    <YAxis dataKey="name" type="category" />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="value" fill="#8884d8" name="Frequency"/>
-                                    
-                                </BarChart>
-                                {/* <BarChart width={600} height={300} data={chartData}>
-                                    <XAxis dataKey="name" />
-                                    <YAxis />
-                                    <Bar dataKey="value" fill="#8884d8"
-                                    />
-                                </BarChart> */}
-                                <BarChart
-                                    width={600}
-                                    height={500}
-                                    data={genreData}
-                                    layout="vertical"
-                                    barSize={20}
-                                    margin={{
-                                        top: 5,
-                                        right: 20,
-                                        left: 40,
-                                        bottom: 5,
-                                    }}
-                                >
-                                    <CartesianGrid strokeDasharray="3 3" />
-                                    <XAxis type="number"/>
-                                    <YAxis dataKey="name" type="category" />
-                                    <Tooltip />
-                                    <Legend />
-                                    <Bar dataKey="value" fill="#8884d8" name="Frequency"/>
-                                    
-                                </BarChart>
-                            </ResponsiveContainer> 
+                            <p className="chart-title">Artist Frequencies</p>
+                    <ResponsiveContainer width="100%" height="50%">
+                        <BarChart
+                            width={600}
+                            height={500}
+                            data={artistData}
+                            layout="vertical"
+                            barSize={20}
+                            margin={{
+                                top: 5,
+                                right: 20,
+                                left: 40,
+                                bottom: 5,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis type="number" />
+                            <YAxis dataKey="name" type="category" />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="value" fill="#8884d8" name="Frequency" />
+                        </BarChart>
+                        {/* <PieChart width={400} height={400} className="piechart">
+                    <Pie
+                        dataKey="value"
+                        isAnimationActive={false}
+                        data={chartData}
+                        cx="50%"
+                        cy="50%"
+                        outerRadius={80}
+                        fill="#8884d8"
+                        startAngle={90}
+                        endAngle={450}
+                    />
+                    <Tooltip />
+                </PieChart> */}
+                    </ResponsiveContainer>
+
+                    <p className="chart-title">Genre Frequencies</p>
+                    <ResponsiveContainer width="100%" height="50%">
+                        <BarChart
+                            width={600}
+                            height={500}
+                            data={genreData}
+                            layout="vertical"
+                            barSize={20}
+                            margin={{
+                                top: 5,
+                                right: 20,
+                                left: 40,
+                                bottom: 5,
+                            }}
+                        >
+                            <CartesianGrid strokeDasharray="3 3" />
+                            <XAxis type="number" />
+                            <YAxis dataKey="name" type="category" />
+                            <Tooltip />
+                            <Legend />
+                            <Bar dataKey="value" fill="#8884d8" name="Frequency" />
+
+                        </BarChart>
+                    </ResponsiveContainer>
                     </div>
                     : null}
                 </Tab>
@@ -194,4 +189,33 @@ const StatTab = (props) => {
     );
 }
 
-export default StatTab;
+export default StatSection;
+
+
+// import React from 'react';
+// import { Tabs, Tab } from 'react-bootstrap';
+
+// import ListTab from '../components/ListTab';
+// import ChartTab from '../components/ChartTab';
+
+
+// const StatSection = (props) => {
+
+//     return (
+//         <div className="stat-tab">
+//             <h5>Playlist Stats</h5>
+//             <Tabs defaultActiveKey="stat" id="tabs" className="tabs">
+//                 <Tab eventKey="stat" title="Superlatives">
+//                     <ListTab stats={props.stats}/>
+//                 </Tab>
+                
+//                 <Tab eventKey="chart" title="Charts">
+//                     <ChartTab {...props} />    
+//                 </Tab>
+
+//             </Tabs>
+//         </div>
+//     );
+// }
+
+// export default StatSection;

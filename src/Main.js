@@ -1,14 +1,13 @@
-import Auth from './functions/Auth';
 import Playlists from './components/Playlists';
-import SongTab from './sections/SongTab';
-import LyricTab from './sections/LyricTab';
-import StatTab from './sections/StatTab';
+import SongSection from './sections/SongSection';
+import LyricSection from './sections/LyricSection';
+import StatSection from './sections/StatSection';
 import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName, fetchArtistFeatures } from './functions/backendCalls';
 import { mergeObjects } from './functions/helperFunctions';
 import './styles.scss';
 
 import React, { useState, useEffect } from 'react';
-import { Row, Navbar, Button, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
+import { Navbar, Button, Spinner, OverlayTrigger, Tooltip } from 'react-bootstrap';
 import { Split } from '@geoffcox/react-splitter';
 
 
@@ -62,24 +61,17 @@ const Main = (props) => {
 
 
     const getAudioFeatures = () => {
-        console.log(selectedSongs);
         if (selectedSongs) {
-            // put song ids into a list to be passed into audio features query
-
             fetchAudioFeatures(props.token, selectedSongs)
                 .then(result => {
-                    console.log(result);
+                    // console.log(result);
                     setAudioFeatures(result);
                 });
         }
     }
 
     const getArtistFeatures = () => {
-
         if (selectedSongs) {
-            // put song ids into a list 
-            console.log("Hello");
-
             fetchArtistFeatures(props.token, selectedSongs)
                 .then(result => {
                     // console.log(mergeObjects(result));
@@ -89,9 +81,8 @@ const Main = (props) => {
     }
 
     const getStats = () => {
-        console.log(audioFeatures);
-        console.log(artistGenres);
-
+        // console.log(audioFeatures);
+        // console.log(artistGenres);
         if (audioFeatures && artistGenres && selectedSongs) {
             fetchStats(audioFeatures, artistGenres, selectedSongs, setStatsObject)
         }
@@ -126,10 +117,6 @@ const Main = (props) => {
                     path: "ERROR",
                     lyricHTML: ["<p className=\"no-lyric-msg\">Lyrics could not be found<p>"]
                 });
-                // let msg = document.createElement('p');
-                // msg.classList.add("no-lyric-msg")
-                // msg.innerHTML = "Lyrics could not be found";
-                // card.appendChild(msg);
             }
         }
     }
@@ -211,14 +198,15 @@ const Main = (props) => {
                     <div className="stats-section scroll-container">
                         <Split initialPrimarySize="33%" minPrimarySize="25%" minSecondarySize="50%">
                             <div className="song-column">
-                                <SongTab playlist={selectedPlaylist.name} showPlaylists={showPlaylists} hideFunc={toggleShowPlaylist} selectedSongs={selectedSongs} audioFeatures={audioFeatures} selectSongFunc={selectSong} />
+                                <SongSection playlist={selectedPlaylist.name} showPlaylists={showPlaylists} hideFunc={toggleShowPlaylist} selectedSongs={selectedSongs} audioFeatures={audioFeatures} selectSongFunc={selectSong} />
                             </div>
                             <Split initialPrimarySize="50%" minPrimarySize="30%" minSecondarySize="30%">
                                 <div className="stat-column">
-                                    <StatTab stats={statsObject} selectedSongs={selectedSongs}/>
+                                    <StatSection stats={statsObject} selectedSongs={selectedSongs}/>
+                                        {/* genres={artistGenres} CRASHES THE PROGRAM why */}
                                 </div>
                                 <div className="lyric-column">
-                                    <LyricTab song={selectedSongs[clickedSong]} lyrics={lyrics} songClicked={clickedSong !== null} />
+                                    <LyricSection song={selectedSongs[clickedSong]} lyrics={lyrics} songClicked={clickedSong !== null} />
                                 </div>
 
                             </Split>

@@ -61,6 +61,7 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
     // sort the genre keys in descending order and get the top 3 
     let topGenres = Object.keys(genreFreq).sort((a, b) => genreFreq[a] < genreFreq[b] ? 1 : genreFreq[a] > genreFreq[b] ? -1 : 0).slice(0, 5);
     resultObject["favoriteGenres"] = topGenres;
+    resultObject["allGenres"] = genreFreq;
 
     return resultObject;
 }

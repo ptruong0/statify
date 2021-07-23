@@ -309,7 +309,7 @@ p {
                     }
                     .song-clickable:hover {
                         background-color: $spotify-green;
-                        transition: 0.4s ease;
+                        transition: 0.3s ease;
                     }
                 }
             }
@@ -339,6 +339,9 @@ p {
             overflow: auto;
             text-align: center;
             height: 100%;
+            .tabs {
+                margin-top: 15px;
+            }
             .stat-card-container {
                 display: grid;
                 grid-template-columns: 1fr;

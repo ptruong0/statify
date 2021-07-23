@@ -3,10 +3,8 @@ import { formatArtistList } from '../functions/helperFunctions';
 
 import { Spinner } from 'react-bootstrap';
 
-const lyricURL = "https://api.lyrics.ovh/v1/";
 
-
-const LyricTab = (props) => {
+const LyricSection = (props) => {
     const geniusURL = 'https://genius.com';
     const lyricComponents = [];
     if (props.lyrics && props.lyrics.lyricHTML) {
@@ -60,4 +58,4 @@ const LyricTab = (props) => {
     );
 };
 
-export default LyricTab;
+export default LyricSection;

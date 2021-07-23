@@ -2,7 +2,7 @@ import SongList from "../components/SongList";
 
 import { Button } from 'react-bootstrap';
 
-const SongTab = (props) => {
+const SongSection = (props) => {
     return (
         <div>
             <div className="playlist-title-row">
@@ -21,4 +21,4 @@ const SongTab = (props) => {
     );
 }
 
-export default SongTab;
+export default SongSection;
