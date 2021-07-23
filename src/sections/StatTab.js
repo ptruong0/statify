@@ -8,7 +8,7 @@ import StatCard from '../components/StatCard';
 
 const StatTab = (props) => {
 
-    const convertToGraphData = (songs) => {
+    const artistDataToGraph = (songs) => {
         let freq = {};
         for (let s of songs) {
             for (let a of s.track.artists) {
@@ -21,25 +21,45 @@ const StatTab = (props) => {
         }
         console.log(freq);
         let data = [];
-        for (let artist of Object.keys(freq)) {
+        for (let [key, value] of Object.entries(freq)) {
             data.push({
-                name: artist,
-                value: freq[artist]
+                name: key,
+                value: value
             })
         }
         data.sort(function (a, b) {
             return b.value - a.value;   // sort in decreasing order
         })
-        console.log(data);
+        // console.log(data);
         return data;
     }
 
-    const chartData = props.selectedSongs ? convertToGraphData(props.selectedSongs) : null;
+    const genreDataToGraph = (freq) => {
+        let data = [];
+        for (let [key, value] of Object.entries(freq)) {
+            data.push({
+                name: key,
+                value: value
+            })
+        }
+        data.sort(function (a, b) {
+            return b.value - a.value;   // sort in decreasing order
+        })
+        // console.log(data);
+        return data;
+    }
+
+    const artistData = props.selectedSongs ? artistDataToGraph(props.selectedSongs) : null;
+    const genreData = props.genres ? genreDataToGraph(props.genres) : null;
 
     const statComponents = props.stats ? [
         <StatCard
-            label="Favorite (Most Frequent) Artist"
-            list={props.stats.favoriteArtist}
+            label="Favorite Artists"
+            list={props.stats.favoriteArtists}
+        />,
+        <StatCard
+            label="Top Genres"
+            list={props.stats.favoriteGenres}
         />,
         <StatCard
             maxLabel="Most Danceable"
@@ -97,8 +117,8 @@ const StatTab = (props) => {
                 </Tab>
                 <Tab eventKey="chart" title="Charts">
                     
-                    {chartData ?
-                        <div style={{ height: chartData.length * 25, width: "100%", color: "#81ca9a" }}>
+                    {artistData && genreData ?
+                        <div style={{ height: artistData.length * 25, width: "100%", color: "#81ca9a" }}>
                             <p className="chart-title">Artist Frequency in Playlist</p>
                             <ResponsiveContainer width="100%" height="100%">
                                 {/* <PieChart width={400} height={400} className="piechart">
@@ -119,7 +139,7 @@ const StatTab = (props) => {
                                 <BarChart
                                     width={600}
                                     height={500}
-                                    data={chartData}
+                                    data={artistData}
                                     layout="vertical"
                                     barSize={20}
                                     margin={{
@@ -143,6 +163,27 @@ const StatTab = (props) => {
                                     <Bar dataKey="value" fill="#8884d8"
                                     />
                                 </BarChart> */}
+                                <BarChart
+                                    width={600}
+                                    height={500}
+                                    data={genreData}
+                                    layout="vertical"
+                                    barSize={20}
+                                    margin={{
+                                        top: 5,
+                                        right: 20,
+                                        left: 40,
+                                        bottom: 5,
+                                    }}
+                                >
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis type="number"/>
+                                    <YAxis dataKey="name" type="category" />
+                                    <Tooltip />
+                                    <Legend />
+                                    <Bar dataKey="value" fill="#8884d8" name="Frequency"/>
+                                    
+                                </BarChart>
                             </ResponsiveContainer> 
                     </div>
                     : null}

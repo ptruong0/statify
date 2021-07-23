@@ -164,7 +164,7 @@ app.get('/audiofeatures', (req, res) => {
             }
         })
         .then((response) => {
-            console.log(response.data.audio_features);
+            // console.log(response.data.audio_features);
             let audioFeatures = [];
             for (let i = 0; i < response.data.audio_features.length; i++) {
                 let obj = {};
@@ -183,11 +183,45 @@ app.get('/audiofeatures', (req, res) => {
 })
 
 
+app.get('/artistgenres', (req, res) => {
+    const accessToken = req.query.accessToken;
+    const url = req.query.url;
+    // const selectedSongs = req.body.data.selectedSongs;
+
+    // console.log(url, selectedSongs);
+    axios.get(url, {
+            headers: {
+                "Authorization": `Bearer ${accessToken}`,
+                "Accept": "application/json",
+                "Content-Type": "application/json"
+            }
+        })
+        .then((response) => {
+            let artistGenres = {};
+            for (let i = 0; i < response.data.artists.length; i++) {
+                for (let g of response.data.artists[i].genres) {
+                    if (g in artistGenres) {
+                        artistGenres[g]++;
+                    } else {
+                        artistGenres[g] = 1;
+                    }
+                }
+            }
+
+            res.json({
+                genreStats: artistGenres,
+            })
+        })
+        .catch(err => console.log(err));
+})
+
+
 app.post('/audiostats', (req, res) => {
     const audioFeatures = req.body.data.audioFeatures;
     const selectedSongs = req.body.data.selectedSongs;
+    const artistGenres = req.body.data.artistGenres;
 
-    const stats = generateStats(audioFeatures, selectedSongs);
+    const stats = generateStats(audioFeatures, artistGenres, selectedSongs);
     res.json({
         stats: stats
     })
@@ -216,8 +250,8 @@ app.get('/lyrics', (req, res) => {
             scrapeLyrics('https://genius.com' + result.data.response.hits[0].result.path)
                 .then(value => {
                     // value = stringify(value);
-                    console.log('.............................')
-                    console.log(value);
+                    // console.log('.............................')
+                    // console.log(value);
                     res.json({
                         path: result.data.response.hits[0].result.path,
                         lyricHTML: value,
@@ -248,7 +282,7 @@ const scrapeLyrics = async(url) => {
 
     console.log(lyricDiv.toArray());
     htmlElements = lyricDiv.toArray().map(x => {
-        console.log(x);
+        // console.log(x);
         return $.html(x);
     })
 

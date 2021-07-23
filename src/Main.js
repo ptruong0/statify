@@ -3,7 +3,8 @@ import Playlists from './components/Playlists';
 import SongTab from './sections/SongTab';
 import LyricTab from './sections/LyricTab';
 import StatTab from './sections/StatTab';
-import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName } from './functions/backendCalls';
+import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName, fetchArtistFeatures } from './functions/backendCalls';
+import { mergeObjects } from './functions/helperFunctions';
 import './styles.scss';
 
 import React, { useState, useEffect } from 'react';
@@ -20,6 +21,7 @@ const Main = (props) => {
     const [showPlaylists, setShowPlaylists] = useState(false);
     const [selectedSongs, setSelectedSongs] = useState(null);
     const [audioFeatures, setAudioFeatures] = useState(null);
+    const [artistGenres, setArtistGenres] = useState(null);
     const [statsObject, setStatsObject] = useState(null);
     const [clickedSong, setClickedSong] = useState(null);
     const [lyrics, setLyrics] = useState(null);
@@ -64,18 +66,34 @@ const Main = (props) => {
         if (selectedSongs) {
             // put song ids into a list to be passed into audio features query
 
-            fetchAudioFeatures(props.token, selectedSongs, setAudioFeatures)
-            .then(result => {
-                console.log(result);
-                setAudioFeatures(result);
-            });
+            fetchAudioFeatures(props.token, selectedSongs)
+                .then(result => {
+                    console.log(result);
+                    setAudioFeatures(result);
+                });
         }
+    }
 
+    const getArtistFeatures = () => {
+
+        if (selectedSongs) {
+            // put song ids into a list 
+            console.log("Hello");
+
+            fetchArtistFeatures(props.token, selectedSongs)
+                .then(result => {
+                    // console.log(mergeObjects(result));
+                    setArtistGenres(mergeObjects(result));
+                });
+        }
     }
 
     const getStats = () => {
-        if (audioFeatures && selectedSongs) {
-            fetchStats(audioFeatures, selectedSongs, setStatsObject)
+        console.log(audioFeatures);
+        console.log(artistGenres);
+
+        if (audioFeatures && artistGenres && selectedSongs) {
+            fetchStats(audioFeatures, artistGenres, selectedSongs, setStatsObject)
         }
     }
 
@@ -123,9 +141,12 @@ const Main = (props) => {
 
     useEffect(loadPage, []);
 
-    useEffect(getAudioFeatures, [selectedSongs]);
+    useEffect(async() => {
+        getAudioFeatures();
+        getArtistFeatures();
+    }, [selectedSongs]);
 
-    useEffect(getStats, [audioFeatures]);
+    useEffect(getStats, [audioFeatures, artistGenres]);
 
     useEffect(getLyrics, [clickedSong]);
 

@@ -1,6 +1,6 @@
+import { capitalize } from '../functions/helperFunctions';
 
 const StatCard = (props) => {
-
     
     return (
         <div className="stat-card">
@@ -9,7 +9,7 @@ const StatCard = (props) => {
             <div>
             <p className="stat-label"><em>{props.label}{": "}</em></p>
             <div>{props.list.map((x, index) => {
-                return <p>{index + 1}. {x}</p>
+                return <p>{index + 1}. {capitalize(x)}</p>
                 })}
             </div>
             </div>
