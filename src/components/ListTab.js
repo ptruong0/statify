@@ -60,7 +60,6 @@ const ListTab = (props) => {
     return (
         <div className="stat-card-container">
             {statComponents}
-            <ListTab />
         </div>
     );
 }

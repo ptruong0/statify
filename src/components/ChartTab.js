@@ -45,12 +45,14 @@ const ChartTab = (props) => {
     const artistData = props.selectedSongs ? artistDataToGraph(props.selectedSongs) : null;
     console.log(artistData);
     const genreData = props.stats ? genreDataToGraph(props.stats.allGenres) : null;
+    
+    const containerHeight = artistData.length * 25 + genreData.length * 25;
 
     return (
         <div>
             {artistData && genreData ?
 
-                <div style={{ height: artistData.length * 25, width: "100%", color: "#81ca9a" }}>
+                <div className="charts" style={{ height: containerHeight }}>
 
                     <p className="chart-title">Artist Frequencies</p>
                     <ResponsiveContainer width="100%" height="50%">
@@ -63,7 +65,7 @@ const ChartTab = (props) => {
                             margin={{
                                 top: 5,
                                 right: 20,
-                                left: 40,
+                                left: 50,
                                 bottom: 5,
                             }}
                         >
@@ -101,7 +103,7 @@ const ChartTab = (props) => {
                             margin={{
                                 top: 5,
                                 right: 20,
-                                left: 40,
+                                left: 50,
                                 bottom: 5,
                             }}
                         >

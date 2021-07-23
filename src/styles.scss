@@ -342,27 +342,35 @@ p {
             .tabs {
                 margin-top: 15px;
             }
-            .stat-card-container {
-                display: grid;
-                grid-template-columns: 1fr;
-                .stat-card {
-                    background: black;
-                    border: 1px solid white;
-                    border-radius: 30px;
-                    padding: 5px;
-                    margin: 10px 30px;
-                    .stat-label {
-                        color: #81ca9a;
-                        padding-top: 5px;
-                        padding-bottom: 3px;
+            .list-tab {
+                .stat-card-container {
+                    display: grid;
+                    grid-template-columns: 1fr;
+                    .stat-card {
+                        background: black;
+                        border: 1px solid white;
+                        border-radius: 30px;
+                        padding: 5px;
+                        margin: 10px 30px;
+                        .stat-label {
+                            color: #81ca9a;
+                            padding-top: 5px;
+                            padding-bottom: 3px;
+                        }
                     }
                 }
             }
-            .chart-title {
-                margin: 20px 0 10px 0;
-            }
-            .bar-chart {
-                color: #81ca9a;
+            .chart-tab {
+                .chart-title {
+                    margin: 20px 0 10px 0;
+                }
+                .bar-chart {
+                    color: #81ca9a;
+                }
+                .charts {
+                    width: 100%;
+                    color: #81ca9a;
+                }
             }
             a {
                 color: #2cceb8;

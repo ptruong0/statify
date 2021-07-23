@@ -200,7 +200,7 @@ const Main = (props) => {
                             <div className="song-column">
                                 <SongSection playlist={selectedPlaylist.name} showPlaylists={showPlaylists} hideFunc={toggleShowPlaylist} selectedSongs={selectedSongs} audioFeatures={audioFeatures} selectSongFunc={selectSong} />
                             </div>
-                            <Split initialPrimarySize="50%" minPrimarySize="30%" minSecondarySize="30%">
+                            <Split initialPrimarySize="60%" minPrimarySize="30%" minSecondarySize="30%">
                                 <div className="stat-column">
                                     <StatSection stats={statsObject} selectedSongs={selectedSongs}/>
                                         {/* genres={artistGenres} CRASHES THE PROGRAM why */}
