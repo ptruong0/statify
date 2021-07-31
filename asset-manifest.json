@@ -1,0 +1,25 @@
+{
+  "files": {
+    "main.css": "/statify/static/css/main.f88b8fda.chunk.css",
+    "main.js": "/statify/static/js/main.8c3dbd3c.chunk.js",
+    "main.js.map": "/statify/static/js/main.8c3dbd3c.chunk.js.map",
+    "runtime-main.js": "/statify/static/js/runtime-main.eda816ae.js",
+    "runtime-main.js.map": "/statify/static/js/runtime-main.eda816ae.js.map",
+    "static/css/2.4c97ca4f.chunk.css": "/statify/static/css/2.4c97ca4f.chunk.css",
+    "static/js/2.b70849d9.chunk.js": "/statify/static/js/2.b70849d9.chunk.js",
+    "static/js/2.b70849d9.chunk.js.map": "/statify/static/js/2.b70849d9.chunk.js.map",
+    "index.html": "/statify/index.html",
+    "static/css/2.4c97ca4f.chunk.css.map": "/statify/static/css/2.4c97ca4f.chunk.css.map",
+    "static/css/main.f88b8fda.chunk.css.map": "/statify/static/css/main.f88b8fda.chunk.css.map",
+    "static/js/2.b70849d9.chunk.js.LICENSE.txt": "/statify/static/js/2.b70849d9.chunk.js.LICENSE.txt",
+    "static/media/frog.6de8bb0d.png": "/statify/static/media/frog.6de8bb0d.png",
+    "static/media/spotifylogo.3a0f4653.png": "/statify/static/media/spotifylogo.3a0f4653.png"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.eda816ae.js",
+    "static/css/2.4c97ca4f.chunk.css",
+    "static/js/2.b70849d9.chunk.js",
+    "static/css/main.f88b8fda.chunk.css",
+    "static/js/main.8c3dbd3c.chunk.js"
+  ]
+}
