@@ -46,7 +46,7 @@ const ChartTab = (props) => {
     console.log(artistData);
     const genreData = props.stats ? genreDataToGraph(props.stats.allGenres) : null;
     
-    const containerHeight = artistData.length * 25 + genreData.length * 25;
+    const containerHeight = artistData && genreData ? artistData.length * 25 + genreData.length * 25 : null;
 
     return (
         <div>

@@ -150,12 +150,7 @@ const Main = (props) => {
             <Spinner animation="grow" variant="success" size="sm" className="spinner" />
             <Spinner animation="grow" variant="success" size="sm" className="spinner" />
             <Spinner animation="grow" variant="success" size="sm" className="spinner" />
-            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
-            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
-            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
-            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
-            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
-            <Spinner animation="grow" variant="success" size="sm" className="spinner" />
+            
 
         </div>
 

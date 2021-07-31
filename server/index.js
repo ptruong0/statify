@@ -5,6 +5,7 @@ const bodyParser = require('body-parser')
 const fetch = require('node-fetch');
 const cheerio = require('cheerio');
 const { parse, stringify } = require('flatted');
+require('dotenv').config();
 const SpotifyWebApi = require('spotify-web-api-node');
 
 const generateStats = require('./generateStats');
@@ -15,6 +16,17 @@ app.use(cors());
 // app.use(bodyParser.json());
 app.use(bodyParser({ limit: '50mb' }));
 
+
+const clientId = process.env.SPOTIFY_CLIENT_ID;
+const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+
+app.get('/oauth-credentials', (req, res) => {
+    res.json({
+        clientId: clientId
+    });
+})
+
+
 // call this endpoint after getting oauth code via login
 // pass code from client to server in order to obtain and send back the token
 app.post('/login', (req, res) => {
@@ -24,8 +36,8 @@ app.post('/login', (req, res) => {
     // initialize object for later use using authentication 
     const spotifyApi = new SpotifyWebApi({
         redirectUri: 'http://localhost:3000',
-        clientId: "89f488fad6fc4e67a2607dba4d955997",
-        clientSecret: "d398655723f34571afe68124176587f4"
+        clientId: clientId,
+        clientSecret: clientSecret
     });
 
     spotifyApi.authorizationCodeGrant(code).then(data => {
@@ -48,8 +60,8 @@ app.post('/refresh', (req, res) => {
     const refreshToken = req.body.refreshToken;
     const spotifyApi = new SpotifyWebApi({
         redirectUri: 'http://localhost:3000',
-        clientId: "89f488fad6fc4e67a2607dba4d955997",
-        clientSecret: "d398655723f34571afe68124176587f4",
+        clientId: clientId,
+        clientSecret: clientSecret,
         refreshToken
     });
 
@@ -71,8 +83,8 @@ app.get('/user', (req, res) => {
     const accessToken = req.body.accessToken;
     const spotifyApi = new SpotifyWebApi({
         redirectUri: 'http://localhost:3000',
-        clientId: "89f488fad6fc4e67a2607dba4d955997",
-        clientSecret: "d398655723f34571afe68124176587f4",
+        clientId: clientId,
+        clientSecret: clientSecret,
         accessToken: accessToken
     });
     spotifyApi.getMe()
