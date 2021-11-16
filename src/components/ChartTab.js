@@ -1,52 +1,14 @@
+import { artistDataToGraph, genreDataToGraph } from '../functions/helperFunctions';
+
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, BarChart, XAxis, YAxis, Bar, CartesianGrid } from 'recharts';
 
 const ChartTab = (props) => {
-    const artistDataToGraph = (songs) => {
-        let freq = {};
-        for (let s of songs) {
-            for (let a of s.track.artists) {
-                if (a.name in freq) {
-                    freq[a.name]++;
-                } else {
-                    freq[a.name] = 1;
-                }
-            }
-        }
-        console.log(freq);
-        let data = [];
-        for (let [key, value] of Object.entries(freq)) {
-            data.push({
-                name: key,
-                value: value
-            })
-        }
-        data.sort(function (a, b) {
-            return b.value - a.value;   // sort in decreasing order
-        })
-        // console.log(data);
-        return data;
-    }
-
-    const genreDataToGraph = (freq) => {
-        let data = [];
-        for (let [key, value] of Object.entries(freq)) {
-            data.push({
-                name: key,
-                value: value
-            })
-        }
-        data.sort(function (a, b) {
-            return b.value - a.value;   // sort in decreasing order
-        })
-        // console.log(data);
-        return data;
-    }
 
     const artistData = props.selectedSongs ? artistDataToGraph(props.selectedSongs) : null;
-    console.log(artistData);
+    //console.log(artistData);
     const genreData = props.stats ? genreDataToGraph(props.stats.allGenres) : null;
     
-    const containerHeight = artistData && genreData ? artistData.length * 25 + genreData.length * 25 : null;
+    const containerHeight = artistData && genreData ? (artistData.length * 25 + genreData.length * 25) : null;
 
     return (
         <div>

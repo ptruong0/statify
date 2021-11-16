@@ -1,25 +1,32 @@
+// Node package imports
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
 const bodyParser = require('body-parser')
-const fetch = require('node-fetch');
-const cheerio = require('cheerio');
-const { parse, stringify } = require('flatted');
+    // const { parse, stringify } = require('flatted');
 require('dotenv').config();
 const SpotifyWebApi = require('spotify-web-api-node');
 
+// local file imports
 const generateStats = require('./generateStats');
+const scrapeLyrics = require('./scrapeLyrics');
 const fields = require('./fields');
 
+// new Node express application
 const app = express();
+
+// middleware
 app.use(cors());
-// app.use(bodyParser.json());
 app.use(bodyParser({ limit: '50mb' }));
 
 
+// secret tokens stored in .env file
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
+const geniusToken = process.env.GENIUS_TOKEN;
 
+
+// get client ID of currently-logged-in user
 app.get('/oauth-credentials', (req, res) => {
     res.json({
         clientId: clientId
@@ -27,7 +34,7 @@ app.get('/oauth-credentials', (req, res) => {
 })
 
 
-// call this endpoint after getting oauth code via login
+// call this endpoint after getting OAuth code via login
 // pass code from client to server in order to obtain and send back the token
 app.post('/login', (req, res) => {
     const code = req.body.code;
@@ -40,24 +47,30 @@ app.post('/login', (req, res) => {
         clientSecret: clientSecret
     });
 
-    spotifyApi.authorizationCodeGrant(code).then(data => {
-        // console.log(data);
+    // generate tokens using external function
+    spotifyApi.authorizationCodeGrant(code)
+        .then(data => {
+            // console.log(data);
 
-        // return tokens back to the client
-        res.json({
-            accessToken: data.body.access_token,
-            refreshToken: data.body.refresh_token,
-            expiresIn: data.body.expires_in
-        });
-    }).catch((err) => {
-        res.sendStatus(400);
-        console.log(err);
-    })
+            // return tokens back to the client
+            res.json({
+                accessToken: data.body.access_token,
+                refreshToken: data.body.refresh_token,
+                expiresIn: data.body.expires_in
+            });
+        })
+        .catch((err) => {
+            res.sendStatus(400);
+            console.log(err);
+        })
 })
 
-// call this endpoint to refresh the token
+
+// refresh the token when it is about to expire 
 app.post('/refresh', (req, res) => {
+    // get refresh token from request body
     const refreshToken = req.body.refreshToken;
+
     const spotifyApi = new SpotifyWebApi({
         redirectUri: 'http://localhost:3000',
         clientId: clientId,
@@ -65,6 +78,7 @@ app.post('/refresh', (req, res) => {
         refreshToken
     });
 
+    // generate fresh tokens using external function
     spotifyApi.refreshAccessToken()
         .then((data) => {
             // console.log(data.body);
@@ -79,28 +93,11 @@ app.post('/refresh', (req, res) => {
         })
 })
 
-app.get('/user', (req, res) => {
-    const accessToken = req.body.accessToken;
-    const spotifyApi = new SpotifyWebApi({
-        redirectUri: 'http://localhost:3000',
-        clientId: clientId,
-        clientSecret: clientSecret,
-        accessToken: accessToken
-    });
-    spotifyApi.getMe()
-        .then((data) => {
-            // console.log('Some information about the authenticated user', data.body);
-            res.json({
-                user: data.body
-            });
-        }, (err) => {
-            console.log('Something went wrong!', err);
-        });
-})
 
+// get the user's profile name to display on the frontend
 app.get('/profilename', (req, res) => {
     const accessToken = req.query.accessToken;
-    const baseURL = 'https://api.spotify.com/v1/me';
+    const baseURL = 'https://api.spotify.com/v1/me'; // endpoint for profile info
     axios.get(baseURL, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
@@ -109,17 +106,20 @@ app.get('/profilename', (req, res) => {
             }
         })
         .then(response => {
-            // setUsername(res.data.display_name);
             res.json({
-                displayName: response.data.display_name
+                displayName: response.data.display_name // display_name attribute contains username
             })
         })
-        .catch(err => console.log(err));
+        .catch((err) => {
+            res.sendStatus(400);
+            console.log(err);
+        })
 })
 
+// retrieve a list of the user's playlists
 app.get('/playlists', (req, res) => {
     const accessToken = req.query.accessToken;
-    const baseURL = 'https://api.spotify.com/v1/me/playlists';
+    const baseURL = 'https://api.spotify.com/v1/me/playlists'; // endpoint for user playlists
     axios.get(baseURL, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
@@ -129,21 +129,25 @@ app.get('/playlists', (req, res) => {
         })
         .then(response => {
             res.json({
-                playlists: response.data.items
+                playlists: response.data.items // playlists stored in items array
             })
-
         })
-        .catch(err => console.log(err));
+        .catch((err) => {
+            res.sendStatus(400);
+            console.log(err);
+        })
 })
 
+
+// get songs in a particular playlist
 app.get('/getplaylist', (req, res) => {
     const accessToken = req.query.accessToken;
-    let url = req.query.url;
-    const offset = req.query.offset;
+    let url = req.query.url; // all song id's concatenated into the url
+    const offset = req.query.offset; // only 100 songscan be retrieved at a time, offset is used to get all
 
-    url += `/tracks?offset=${offset}`;
+    url += `/tracks?offset=${offset}`; // endpoint to retrieve tracks/songs
 
-    console.log("offset: " + offset);
+    // console.log("offset: " + offset);
     axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
@@ -153,21 +157,23 @@ app.get('/getplaylist', (req, res) => {
             }
         })
         .then(response => {
-            console.log(response.data.items);
+            // console.log(response.data.items);
             res.json({
-                songs: response.data.items
+                songs: response.data.items // songs stored in items array
             })
         })
-        .catch(err => console.log(err));
+        .catch((err) => {
+            res.sendStatus(400);
+            console.log(err);
+        })
 })
 
 
+// get audio features for certain songs 
 app.get('/audiofeatures', (req, res) => {
     const accessToken = req.query.accessToken;
-    const url = req.query.url;
-    // const selectedSongs = req.body.data.selectedSongs;
+    const url = req.query.url; // all song id's concatenated into the url
 
-    // console.log(url, selectedSongs);
     axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
@@ -177,30 +183,36 @@ app.get('/audiofeatures', (req, res) => {
         })
         .then((response) => {
             // console.log(response.data.audio_features);
-            let audioFeatures = [];
+
+            // accumulate all audio features for a song into an object, then add to the list of song's audio features
+            let songsAudioFeatures = [];
             for (let i = 0; i < response.data.audio_features.length; i++) {
                 let obj = {};
-                for (let f of fields) {
-                    obj[f] = response.data.audio_features[i][f];
+                for (let f of fields) { // fields contain the categories data that the API will send back
+                    // console.log(response.data.audio_features[i]);
+                    if (response.data.audio_features[i]) {
+                        obj[f] = response.data.audio_features[i][f];
+                    }
                 }
-                audioFeatures.push(obj);
+                songsAudioFeatures.push(obj);
             }
 
             res.json({
-                // stats: stats,
-                audioFeatures: audioFeatures,
+                audioFeatures: songsAudioFeatures, // send back list
             })
         })
-        .catch(err => console.log(err));
+        .catch((err) => {
+            res.sendStatus(400);
+            console.log(err);
+        })
 })
 
 
+// get the genres of selected artists
 app.get('/artistgenres', (req, res) => {
     const accessToken = req.query.accessToken;
-    const url = req.query.url;
-    // const selectedSongs = req.body.data.selectedSongs;
+    const url = req.query.url; // all artist id's concatenated into the url
 
-    // console.log(url, selectedSongs);
     axios.get(url, {
             headers: {
                 "Authorization": `Bearer ${accessToken}`,
@@ -209,6 +221,7 @@ app.get('/artistgenres', (req, res) => {
             }
         })
         .then((response) => {
+            // store and keep count of every artists' genre(s) in an object
             let artistGenres = {};
             for (let i = 0; i < response.data.artists.length; i++) {
                 for (let g of response.data.artists[i].genres) {
@@ -221,88 +234,73 @@ app.get('/artistgenres', (req, res) => {
             }
 
             res.json({
-                genreStats: artistGenres,
+                genreStats: artistGenres, // send back object
             })
         })
-        .catch(err => console.log(err));
+        .catch((err) => {
+            res.sendStatus(400);
+            console.log(err);
+        })
 })
 
 
+// generate stats using the previously-fetched data
 app.post('/audiostats', (req, res) => {
-    const audioFeatures = req.body.data.audioFeatures;
-    const selectedSongs = req.body.data.selectedSongs;
-    const artistGenres = req.body.data.artistGenres;
+    const data = req.body.data;
 
-    const stats = generateStats(audioFeatures, artistGenres, selectedSongs);
+    const stats = generateStats(data.audioFeatures, data.artistGenres, data.selectedSongs);
+
     res.json({
         stats: stats
     })
 })
 
 
-
+// get lyrics for a select song from Genius API 
 app.get('/lyrics', (req, res) => {
     const baseURL = "https://api.genius.com/";
-    const token = "YLPGEOOSKyH--P-F3EHHWFujtGE4qdcIQL9LBQR5hl1vSjfm2EBqad4Qom_HrgXa";
 
     const artist = req.query.artist;
     const title = req.query.title;
 
-    const searchURL = `${baseURL}search?q=${artist} ${title}`;
+    const searchURL = `${baseURL}search?q=${artist} ${title}`; // search for the artist + song title in Genius database
+    // console.log(searchURL);   
+
     axios.get(searchURL, {
             headers: {
                 "Accept": "application/json",
-                "Authorization": "Bearer " + token,
+                "Authorization": "Bearer " + geniusToken,
                 "User-Agent": "CompuServe Classic/1.22",
                 "Host": "api.genius.com"
             }
         })
         .then(result => {
+            // search should return the Genius URL for that song's lyric page
+            // now, scrape that webpage to return just the lyrics in HTML form
 
             scrapeLyrics('https://genius.com' + result.data.response.hits[0].result.path)
                 .then(value => {
-                    // value = stringify(value);
-                    // console.log('.............................')
                     // console.log(value);
+
+                    // send back song lyrics in HTML form
                     res.json({
+                        // path signals if there is an error (not found)
                         path: result.data.response.hits[0].result.path,
                         lyricHTML: value,
                     });
                 });
         })
-
-    .catch(err => {
-        console.log(err);
-        res.json({
-            path: "ERROR"
-        })
-    });
+        .catch(err => {
+            console.log(err);
+            res.json({
+                path: "ERROR" // let frontend know that lyrics are not found
+            })
+        });
 })
 
-
-const scrapeLyrics = async(url) => {
-    console.log(url);
-
-    const res = await fetch(url);
-
-    const html = await res.text();
-    const $ = cheerio.load(html);
-    const lyricDiv = $('div.Lyrics__Container-sc-1ynbvzw-8');
-    // console.log(lyricDiv);
-    // console.log(lyricDiv.html())
-    let htmlElements = [];
-
-    console.log(lyricDiv.toArray());
-    htmlElements = lyricDiv.toArray().map(x => {
-        // console.log(x);
-        return $.html(x);
-    })
-
-    return htmlElements;
-}
 
 
 app.listen(5000, () => console.log("Listening on port 5000..."));
 
-// to start server,
+// to start server, navigate to spot/server
 // npm run start

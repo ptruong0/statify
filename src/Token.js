@@ -1,13 +1,13 @@
 import Main from './Main';
-import Auth from './functions/Auth';
+import SpotifyAuth from './functions/spotifyAuth';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 const Token = (props) => {
     const [token, setToken] = useState(null);
 
     async function getToken(code) {
-        const accessToken = await Promise.resolve(Auth(code));
+        const accessToken = await Promise.resolve(SpotifyAuth(code));
         return accessToken;
     }
 

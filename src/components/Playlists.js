@@ -5,7 +5,8 @@ import PlaylistCard from './PlaylistCard';
 import '../styles.scss';
 
 const Playlists = (props) => {
-    const components = props.list ? props.list.map((p, index) => {
+    // convert list of playlist objects into list of playlist card components
+    const playlistComponents = props.list ? props.list.map((p, index) => {
         return <PlaylistCard 
             playlist={p} 
             select={props.select} 
@@ -18,16 +19,18 @@ const Playlists = (props) => {
         <div>
             <Row className="playlists-row row justify-content-around">
                 <div className="text-container">
-                    <h2>Your<br/>Playlists</h2>
+                    <h2>Your Public<br/>Playlists</h2>
                 </div>
                 
                 <div className="playlists-list col-6" >
-                    {components}
+                    {playlistComponents}
                 </div>
+
                 {props.visible ?
-                <Button onClick={props.hide} size="md" variant="outline-info" className="show-playlists-btn">
-                    Hide 
-                </Button>
+                    // when changing playlists, user has the option to hide the playlists portion
+                    <Button onClick={props.hide} size="md" variant="outline-info" className="show-playlists-btn">
+                        Hide 
+                    </Button>
                 : null }
             </Row>
             

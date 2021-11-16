@@ -1,10 +1,27 @@
 import axios from 'axios';
 
-
 const backendURL = "http://localhost:5000";
 
+// contains all the functions that call the backend
+// does not include the Spotfy OAuth login process
 
-export const fetchProfileName = (token, setFunc) => {
+export const fetchOauthClientId = (onError = (e) => {}) => {
+    const REDIRECT_URI = 'http://localhost:3000';
+
+    axios.get('http://localhost:5000/oauth-credentials')
+        .then(res => {
+            const CLIENT_ID = res.data.clientId;
+            window.location.href = `https://accounts.spotify.com/authorize?client_id=${CLIENT_ID}&response_type=code&redirect_uri=${REDIRECT_URI}&scope=streaming%20user-read-email%20user-read-private%20user-library-read%20user-library-modify%20user-read-playback-state%20user-modify-playback-state`
+        })
+        .catch(err => {
+            console.log(err);
+            onError(err.message);
+        });
+
+}
+
+
+export const fetchProfileName = (token, setFunc, onError = (e) => {}) => {
     axios.get(backendURL + "/profilename", {
             headers: {
                 "Content-Type": "application/json"
@@ -16,11 +33,14 @@ export const fetchProfileName = (token, setFunc) => {
         .then((res) => {
             setFunc(res.data.displayName);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            onError(err.message);
+        });
 }
 
 
-export const fetchAllPlaylists = (token, setFunc) => {
+export const fetchAllPlaylists = (token, setFunc, onError = (e) => {}) => {
     axios.get(backendURL + "/playlists", {
             headers: {
                 "Content-Type": "application/json"
@@ -32,12 +52,15 @@ export const fetchAllPlaylists = (token, setFunc) => {
         .then((res) => {
             setFunc(res.data.playlists);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            onError(err.message);
+        });
 }
 
 
-export const fetchAPlaylist = async(token, url) => {
-    const get100Songs = async(offset, token, url) => {
+export const fetchAPlaylist = async(token, url, onError = (e) => {}) => {
+    const get100Songs = async(offset, token, url, onError) => {
         let list = [];
         await axios.get(backendURL + "/getplaylist", {
                 headers: {
@@ -53,7 +76,10 @@ export const fetchAPlaylist = async(token, url) => {
                 // console.log(res.data.songs);
                 list = res.data.songs;
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                onError(err.message);
+            });
         return list;
     }
 
@@ -63,7 +89,7 @@ export const fetchAPlaylist = async(token, url) => {
     let isComplete = false;
 
     while (!isComplete) {
-        await get100Songs(offset, token, url)
+        await get100Songs(offset, token, url, onError)
             .then(result => {
                 // console.log(result);
                 if (result.length < 100) {
@@ -78,8 +104,8 @@ export const fetchAPlaylist = async(token, url) => {
 
 
 
-export const fetchAudioFeatures = async(token, selectedSongs) => {
-    const get100Audio = async(token, url) => {
+export const fetchAudioFeatures = async(token, selectedSongs, onError = (e) => {}) => {
+    const get100Audio = async(token, url, onError) => {
         let list = [];
         await axios.get(backendURL + "/audiofeatures", {
                 headers: {
@@ -94,7 +120,10 @@ export const fetchAudioFeatures = async(token, selectedSongs) => {
             .then((res) => {
                 list = res.data.audioFeatures;
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                onError(err.message);
+            });
         return list;
     }
 
@@ -112,7 +141,7 @@ export const fetchAudioFeatures = async(token, selectedSongs) => {
         for (let s of idList) {
             ids += s + ","; // accumulate id's in a string 100 at a time
             count++;
-            if (count == 100) {
+            if (count === 100) {
                 break;
             }
         }
@@ -126,7 +155,7 @@ export const fetchAudioFeatures = async(token, selectedSongs) => {
         url = "https://api.spotify.com/v1/audio-features?ids=";
         url += ids;
 
-        await get100Audio(token, url)
+        await get100Audio(token, url, onError)
             .then(result => {
                 allAudio.push(...result);
             })
@@ -135,8 +164,8 @@ export const fetchAudioFeatures = async(token, selectedSongs) => {
 }
 
 
-export const fetchArtistFeatures = async(token, selectedSongs) => {
-    const get50Artists = async(token, url) => {
+export const fetchArtistFeatures = async(token, selectedSongs, onError = (e) => {}) => {
+    const get50Artists = async(token, url, onError) => {
         let list = {};
         await axios.get(backendURL + "/artistgenres", {
                 headers: {
@@ -150,10 +179,12 @@ export const fetchArtistFeatures = async(token, selectedSongs) => {
             .then((res) => {
                 list = res.data.genreStats;
             })
-            .catch(err => console.log(err));
+            .catch(err => {
+                console.log(err);
+                onError(err.message);
+            });
         return list;
     }
-
 
     // put artist ids into a list 
     let idList = selectedSongs.map((s) => {
@@ -169,7 +200,7 @@ export const fetchArtistFeatures = async(token, selectedSongs) => {
         for (let s of idList) {
             ids += s + ","; // accumulate id's in a string 100 at a time
             count++;
-            if (count == 50) {
+            if (count === 50) {
                 break;
             }
         }
@@ -183,7 +214,7 @@ export const fetchArtistFeatures = async(token, selectedSongs) => {
         url = "https://api.spotify.com/v1/artists?ids=";
         url += ids;
 
-        await get50Artists(token, url)
+        await get50Artists(token, url, onError)
             .then(result => {
                 allGenres.push(result);
             })
@@ -192,7 +223,7 @@ export const fetchArtistFeatures = async(token, selectedSongs) => {
 }
 
 
-export const fetchStats = (audio, genres, selectedSongs, setFunc) => {
+export const fetchStats = (audio, genres, selectedSongs, setFunc, onError = (e) => {}) => {
     axios.post(backendURL + "/audiostats", {
             headers: {
                 "Content-Type": "application/json"
@@ -206,11 +237,14 @@ export const fetchStats = (audio, genres, selectedSongs, setFunc) => {
         .then(res => {
             setFunc(res.data.stats);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            onError(err.message);
+        });
 }
 
 
-export const fetchLyrics = (title, artist, setFunc) => {
+export const fetchLyrics = (title, artist, setFunc, onError = (e) => {}) => {
     axios.get(backendURL + "/lyrics", {
             headers: {
                 "Content-Type": "application/json"
@@ -224,5 +258,8 @@ export const fetchLyrics = (title, artist, setFunc) => {
             console.log(res.data);
             setFunc(res.data);
         })
-        .catch(err => console.log(err));
+        .catch(err => {
+            console.log(err);
+            onError(err.message);
+        });
 }

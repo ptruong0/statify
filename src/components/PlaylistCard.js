@@ -1,15 +1,9 @@
 import React from 'react';
-import { ListGroup } from 'react-bootstrap';
+
 import '../styles.scss';
 
 
 const PlaylistCard = (props) => {
-    // return (
-    //     <div>
-            
-    //         <h3>{props.playlist.name}</h3>
-    //     </div>
-    // );
     
     return (
         <div className="playlist-card cursor-hover"

@@ -172,6 +172,8 @@ p {
         animation: float-in-place 2s linear 0s infinite;
     }
     .music-notes {
+        display: flex;
+        justify-content: center;
         .note {
             position: fixed;
             height: 30px;
@@ -179,14 +181,16 @@ p {
             z-index: 99;
         }
         .note1 {
-            top: 58%;
-            left: 70%;
+            // top: 58%;
+            // left: 70%;
+            margin-right: 12%;
             background-image: url("/assets/doublequarternote.png");
             animation: float-up 6s linear 0s infinite normal, sway1 6s linear 0s infinite normal;
         }
         .note2 {
-            top: 58%;
-            left: 82%;
+            // top: 58%;
+            // left: 82%;
+            margin-left: 10%;
             background-image: url("/assets/singlequarternote.png");
             animation: float-up 6s ease-out 0s infinite normal, sway2 6s linear 0s infinite normal;
         }
@@ -217,6 +221,12 @@ p {
         .nav-text {
             padding: 0 40px;
         }
+    }
+    .frog-logo {
+        margin: 0px 25px;
+        padding-top: 5px;
+        height: 50px;
+        width: 75px;
     }
 }
 
@@ -330,6 +340,12 @@ p {
                 }
                 .no-lyric-msg {
                     color: red;
+                }
+            }
+            .lyric-title {
+                color: $spotify-green;
+                .white-by {
+                    color: white;
                 }
             }
         }

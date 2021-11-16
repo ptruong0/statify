@@ -1,6 +1,7 @@
 const fields = require('./fields');
 
 const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
+    // initialize the maximums and minimums
     let maximums = {};
     let minimums = {};
     let maxIndices = {};
@@ -12,14 +13,14 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
         minIndices[f] = 0;
     }
 
+    // info stores each song's audio features data
     let info = [];
-
-
 
     for (let i = 0; i < audioFeatures.length; i++) {
         const song = audioFeatures[i];
         info[i] = {};
 
+        // determine the maximum and minimum for each field 
         for (let f of fields) {
             if (song[f] > maximums[f]) {
                 maximums[f] = song[f];
@@ -33,6 +34,7 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
 
     }
 
+    // store all maxs and mins into one cumulative object 
     const resultObject = {};
     for (let f of fields) {
         resultObject["max_" + f] = selectedSongs[maxIndices[f]];
@@ -55,13 +57,14 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
     }
     // sort the artist keys in descending order and get the top 3 
     let topArtists = Object.keys(artistFreq).sort((a, b) => artistFreq[a] < artistFreq[b] ? 1 : artistFreq[a] > artistFreq[b] ? -1 : 0).slice(0, 3);
-    resultObject["favoriteArtists"] = topArtists;
-    // console.log(resultObject["favoriteArtist"]);
+    resultObject["favoriteArtists"] = topArtists; // store 
 
     // sort the genre keys in descending order and get the top 3 
     let topGenres = Object.keys(genreFreq).sort((a, b) => genreFreq[a] < genreFreq[b] ? 1 : genreFreq[a] > genreFreq[b] ? -1 : 0).slice(0, 5);
     resultObject["favoriteGenres"] = topGenres;
     resultObject["allGenres"] = genreFreq;
+
+    resultObject["audioInfo"] = info;
 
     return resultObject;
 }

@@ -1,58 +1,51 @@
-
-import { formatArtistList } from '../functions/helperFunctions';
+import { formatArtistList, lyricsToComponents } from '../functions/helperFunctions';
 
 import { Spinner } from 'react-bootstrap';
 
 
 const LyricSection = (props) => {
     const geniusURL = 'https://genius.com';
-    const lyricComponents = [];
-    if (props.lyrics && props.lyrics.lyricHTML) {
-        const html = props.lyrics.lyricHTML;
-
-        if (props.lyrics.path === "ERROR") {
-            console.log(html);
-            lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[0] }} className="no-lyric-msg"></div>)
-
-        } else if (props.lyrics.lyricHTML.length > 0) {
-            // console.log(props.lyrics.lyricHTML);
-            if (html.length > 1) {
-                for (let i = 0; i < html.length; i++) {
-                    lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[i] }}></div>)
-                    lyricComponents.push(<br/>)
-                }
-            } else {
-                lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[0] }}></div>)
-            }
-        }
-    }
-
+    const lyricComponents = lyricsToComponents(props.lyrics);
 
     return (
         <div>
             <h5>Lyrics</h5>
             {props.song && props.lyrics ?
+                // song has selected and loaded
+
                 <div>
+                    {/* display song title and artist(s) */}
                     <h6 className="lyric-title">
-                        <strong>{props.song.track.name}</strong> by <strong>{formatArtistList(props.song.track.artists)}</strong>
+                        <strong>{props.song.track.name}</strong>
+                        <span className="white-by"> by </span>
+                        <strong>{formatArtistList(props.song.track.artists)}</strong>
                     </h6>
                     <br />
+                    
+                    {/* lyrics HTML */}
                     <div className="lyric-container">
                         {lyricComponents}
                     </div>
                     <br />
+
+                    {/* lyrics source credit */}
                     {props.lyrics.path !== "ERROR" ? 
-                    <a href={geniusURL + props.lyrics.path} target="_blank">Lyric Source: Genius</a>
+                        <a href={geniusURL + props.lyrics.path} target="_blank">Lyric Source: Genius</a>
                     : null }
                 </div>
+
                 :
+             
                 props.songClicked ?
+                    // song hasn't loaded yet -> loading graphic
                     <div className="triple-spinners">
                         <Spinner animation="grow" variant="success" size="sm" className="spinner" />
                         <Spinner animation="grow" variant="success" size="sm" className="spinner" />
                         <Spinner animation="grow" variant="success" size="sm" className="spinner" />
                     </div>
-                    : <p>Click on a song to display its lyrics</p>
+                    : 
+                    // song hasn't been selected yet
+                    <p>Click on a song to display its lyrics</p>
             }
         </div>
     );

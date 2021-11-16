@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import axios from 'axios';
 
-const Auth = (code) => {
+// Contains all backend calls related to the Spotifiy OAuth authentication process
+const SpotifyAuth = (code) => {
     const [accessToken, setAccessToken] = useState();
     const [refreshToken, setRefreshToken] = useState();
     const [expiresIn, setExpiresIn] = useState();
-
-    const [user, setUser] = useState();
 
     useEffect(() => {
 
@@ -24,15 +23,6 @@ const Auth = (code) => {
             .catch(() => {
                 window.location = '/'
             });
-
-        /*
-        axios.get('http://localhost:5000/user', { accessToken })
-            .then(res => {
-                setUser(res.data.user);
-                console.log(user);
-            })
-            .catch(err => console.log(err));
-            */
 
 
     }, [code]); // call useEffect when code changes
@@ -65,4 +55,4 @@ const Auth = (code) => {
     return accessToken;
 }
 
-export default Auth;
+export default SpotifyAuth;
