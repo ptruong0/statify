@@ -233,6 +233,7 @@ exports.getGenres = (req, res) => {
 // generate stats using the previously-fetched data
 exports.postStats = (req, res) => {
     const data = req.body.data;
+    //console.log(data);
 
     const stats = generateStats(data.audioFeatures, data.artistGenres, data.selectedSongs);
 

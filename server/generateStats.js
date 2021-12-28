@@ -6,15 +6,18 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
     let minimums = {};
     let maxIndices = {};
     let minIndices = {};
+    let total = {};
     for (let f of fields) {
         maximums[f] = audioFeatures[0][f];
         minimums[f] = audioFeatures[0][f];
+        total[f] = 0;
         maxIndices[f] = 0;
         minIndices[f] = 0;
     }
 
     // info stores each song's audio features data
     let info = [];
+
 
     for (let i = 0; i < audioFeatures.length; i++) {
         const song = audioFeatures[i];
@@ -30,6 +33,7 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
                 minIndices[f] = i;
             }
             info[i][f] = song[f];
+            total[f] += song[f];
         }
 
     }
@@ -39,8 +43,11 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
     for (let f of fields) {
         resultObject["max_" + f] = selectedSongs[maxIndices[f]];
         resultObject["min_" + f] = selectedSongs[minIndices[f]];
+        resultObject["max_" + f + "_value"] = maximums[f];
+        resultObject["min_" + f + "_value"] = minimums[f];
+        resultObject["avg_" + f] = total[f] / audioFeatures.length;
     }
-    // console.log(resultObject);
+    console.log(resultObject);
 
 
     let artistFreq = {};
@@ -56,7 +63,7 @@ const generateStats = (audioFeatures, genreFreq, selectedSongs) => {
         }
     }
     // sort the artist keys in descending order and get the top 3 
-    let topArtists = Object.keys(artistFreq).sort((a, b) => artistFreq[a] < artistFreq[b] ? 1 : artistFreq[a] > artistFreq[b] ? -1 : 0).slice(0, 3);
+    let topArtists = Object.keys(artistFreq).sort((a, b) => artistFreq[a] < artistFreq[b] ? 1 : artistFreq[a] > artistFreq[b] ? -1 : 0).slice(0, 5);
     resultObject["favoriteArtists"] = topArtists; // store 
 
     // sort the genre keys in descending order and get the top 3 

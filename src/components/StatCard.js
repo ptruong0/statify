@@ -1,7 +1,9 @@
 import { capitalize } from '../functions/helperFunctions';
 
 const StatCard = (props) => {
-    
+    const maxValue = props.maxValue ? `(${props.maxValue})` : null;
+    const minValue = props.minValue ? `(${props.minValue})` : null;
+
     return (
         <div className="stat-card">
             {props.label && props.list && props.list.length !== 0 ? 
@@ -16,8 +18,10 @@ const StatCard = (props) => {
             :
             // for statistics with a most and least superlative
             <div>
-            <p className="stat-label"><em>{props.maxLabel}{": "}</em></p><p>{props.maxSong.track.name}</p>
-            <p className="stat-label"><em>{props.minLabel}{": "}</em></p><p>{props.minSong.track.name}</p>
+            <p className="stat-label"><em>{props.maxLabel}{": "}</em></p><p>{props.maxSong.track.name} {maxValue}</p>
+            <p className="stat-label"><em>{props.minLabel}{": "}</em></p><p>{props.minSong.track.name} {minValue}</p>
+            <br />
+            <p><span className="stat-label"><em>Average Value: </em></span>{props.avg}</p>
             </div>
             }           
         </div>

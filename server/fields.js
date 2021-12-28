@@ -1,3 +1,3 @@
-const fields = ["danceability", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "tempo"]
+const fields = ["acousticness", "danceability", "duration_ms", "energy", "instrumentalness", "liveness", "loudness", "speechiness", "tempo", "valence"]
 
 module.exports = fields;

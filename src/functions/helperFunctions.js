@@ -1,7 +1,7 @@
 import { toast } from 'react-toastify';
 
 
-// converts a milliseconds value to seconds or minutes
+// converts a milliseconds value to seconds or minutes, returns string
 export const formatDuration = (ms) => {
     let str = "";
     let totalSeconds = Math.round(ms / 1000);

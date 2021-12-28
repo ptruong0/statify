@@ -1,60 +1,36 @@
 import StatCard from '../components/StatCard';
 
+import statTemplates from './statTemplates';
+
 
 const ListTab = (props) => {
+    
 
-    const statComponents = props.stats ? [
-        <StatCard
-            label="Favorite Artists"
-            list={props.stats.favoriteArtists}
-        />,
-        <StatCard
-            label="Top Genres"
-            list={props.stats.favoriteGenres}
-        />,
-        <StatCard
-            maxLabel="Most Danceable"
-            minLabel="Least Danceable"
-            maxSong={props.stats.max_danceability}
-            minSong={props.stats.min_danceability}
-        />,
-        <StatCard
-            maxLabel="Most Energetic"
-            minLabel="Least Energetic"
-            maxSong={props.stats.max_energy}
-            minSong={props.stats.min_energy}
-        />,
-        <StatCard
-            maxLabel="Most Instrumental"
-            minLabel="Least Instrumental"
-            maxSong={props.stats.max_instrumentalness}
-            minSong={props.stats.min_instrumentalness}
-        />,
-        <StatCard
-            maxLabel="Liveliest"
-            minLabel="Least Lively"
-            maxSong={props.stats.max_liveness}
-            minSong={props.stats.min_liveness}
-        />,
-        <StatCard
-            maxLabel="Loudest"
-            minLabel="Quietest"
-            maxSong={props.stats.max_loudness}
-            minSong={props.stats.min_loudness}
-        />,
-        <StatCard
-            maxLabel="Most Speech/Vocals"
-            minLabel="Least Speech/Vocals"
-            maxSong={props.stats.max_speechiness}
-            minSong={props.stats.min_speechiness}
-        />,
-        <StatCard
-            maxLabel="Fastest Tempo"
-            minLabel="Slowest Tempo"
-            maxSong={props.stats.max_tempo}
-            minSong={props.stats.min_tempo}
-        />,
-    ] : null;
+    const statComponents = props.stats ? 
+        statTemplates(props.stats).map((s) => {
+            let maxValue = s.presetMaxValue;
+            let minValue = s.presetMinValue;
+            let avgValue = s.presetAvgValue;
+            if (!maxValue && !minValue) {
+                maxValue = props.stats["max_" + s.feature + "_value"] + (s.suffix ? " " + s.suffix : "");
+                minValue = props.stats["min_" + s.feature + "_value"] + (s.suffix ? " " +s.suffix : "");
+                avgValue = parseFloat(props.stats["avg_" + s.feature]).toFixed(5).toString() + (s.suffix ? " " + s.suffix : "");
+            }
+
+            return <StatCard 
+                label={s.label}
+                list={s.list}
+                maxLabel={s.maxLabel}
+                minLabel={s.minLabel}
+                feature={s.feature}
+                maxSong={props.stats["max_" + s.feature]}
+                minSong={props.stats["min_" + s.feature]}
+                maxValue={maxValue}
+                minValue={minValue}
+                avg={avgValue}
+            />;
+        }) : null;
+    
 
 
     return (
