@@ -366,8 +366,12 @@ p {
             overflow: auto;
             height: 100%;
             text-align: center;
-            a {
+            .genius-link {
                 color: yellow;
+            }
+            .youtube-link {
+                color: #ff4133;
+                font-weight: bold;
             }
             .hide-lyrics {
                 font-size: 14px;

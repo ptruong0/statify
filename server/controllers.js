@@ -10,6 +10,7 @@ const fields = require('./fields');
 const clientId = process.env.SPOTIFY_CLIENT_ID;
 const clientSecret = process.env.SPOTIFY_CLIENT_SECRET;
 const geniusToken = process.env.GENIUS_TOKEN;
+const youtubeKey = process.env.YOUTUBE_API_KEY;
 
 
 // get client ID of currently-logged-in user
@@ -281,3 +282,31 @@ exports.getLyrics = (req, res) => {
             })
         });
 };
+
+
+exports.getYoutubeVideo = (req, res) => {
+    const artist = req.query.artist;
+    const title = req.query.title;
+    const searchQuery = title.replace(' ', '+') + '+' + artist.replace(' ', '+');
+
+    let url = "https://www.googleapis.com/youtube/v3/search?part=snippet&type=video&maxResults=1";
+    url += `&key=${youtubeKey}`;
+    url += `&q=${searchQuery}`;
+
+
+    axios.get(url)
+        .then(response => {
+            const videoId = response.data.items[0].id.videoId;
+            if (videoId) {
+                res.json({
+                    youtubeId: videoId
+                })
+            } else {
+                res.sendStatus(400);
+            }
+        })
+        .catch((err) => {
+            res.sendStatus(400);
+            console.log(err);
+        })
+}

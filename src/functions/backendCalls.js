@@ -262,4 +262,27 @@ export const fetchLyrics = (title, artist, setFunc, onError = (e) => {}) => {
             console.log(err);
             onError(err.message);
         });
+
+
 }
+
+export const fetchYoutube = (title, artist, setFunc, onError = (e) => {}) => {
+    axios.get(backendURL + "/search-youtube", {
+            headers: {
+                "Content-Type": "application/json"
+            },
+            params: {
+                title: title,
+                artist: artist
+            }
+        })
+        .then(res => {
+            console.log(res.data);
+            setFunc(res.data.youtubeId);
+        })
+        .catch(err => {
+            console.log(err);
+            onError(err.message);
+        });
+
+};

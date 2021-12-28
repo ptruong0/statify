@@ -6,7 +6,7 @@ const bodyParser = require('body-parser')
 require('dotenv').config();
 
 // controller function imports
-const { getOAuth, postLogin, postRefresh, getProfileName, getPlaylists, getSongs, getAudioFeatures, getGenres, postStats, getLyrics } = require('./controllers');
+const { getOAuth, postLogin, postRefresh, getProfileName, getPlaylists, getSongs, getAudioFeatures, getGenres, postStats, getLyrics, getYoutubeVideo } = require('./controllers');
 
 
 // new Node express application
@@ -56,6 +56,8 @@ app.post('/audiostats', postStats);
 
 // get lyrics for a select song from Genius API 
 app.get('/lyrics', getLyrics);
+
+app.get('/search-youtube', getYoutubeVideo);
 
 
 

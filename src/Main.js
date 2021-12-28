@@ -4,7 +4,7 @@ import SongSection from './sections/SongSection';
 import LyricSection from './sections/LyricSection';
 import StatSection from './sections/StatSection';
 import Spinners from './components/Spinners';
-import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName, fetchArtistFeatures } from './functions/backendCalls';
+import { fetchAllPlaylists, fetchAPlaylist, fetchAudioFeatures, fetchStats, fetchLyrics, fetchProfileName, fetchArtistFeatures, fetchYoutube } from './functions/backendCalls';
 import { mergeObjects, showError } from './functions/helperFunctions';
 import './styles.scss';
 
@@ -42,6 +42,7 @@ const Main = (props) => {
     const [statsObject, setStatsObject] = useState(null);
     const [clickedSong, setClickedSong] = useState(null);
     const [lyrics, setLyrics] = useState(null);
+    const [youtube, setYoutube] = useState(null);
 
     const [showPlaylists, setShowPlaylists] = useState(false);
     const [showLyrics, setShowLyrics] = useState(true);
@@ -68,6 +69,7 @@ const Main = (props) => {
             setAudioFeatures(null);
             setStatsObject(null);
             setLyrics(null);
+            setYoutube(null);
             setSelectedPlaylist(p);
             setShowPlaylists(false);
             console.log("selecting " + p.name);
@@ -110,6 +112,7 @@ const Main = (props) => {
     // gets lyrics when a song is clicked
     const getLyrics = () => {
         setLyrics(null);
+        setYoutube(null);
         if (clickedSong != null) {
 
             const title = selectedSongs[clickedSong].track.name;
@@ -117,6 +120,7 @@ const Main = (props) => {
             console.log(title + " " + artist);
 
             fetchLyrics(title, artist, setLyrics, showError);
+            fetchYoutube(title, artist, setYoutube, showError);
         }
     }
 
@@ -126,10 +130,8 @@ const Main = (props) => {
     };
 
 
-    const renderLyrics = () => {
+    const renderLyricsError = () => {
         if (lyrics) {
-            console.log(lyrics);
-            let card = document.querySelector(`#song-info-${clickedSong}`);
             if (lyrics.path === "ERROR" && !lyrics.lyricHTML) {
                 setLyrics({
                     path: "ERROR",
@@ -164,7 +166,7 @@ const Main = (props) => {
     useEffect(getLyrics, [clickedSong]);
 
     // display lyric components once the lyrics are retrieved
-    useEffect(renderLyrics, [lyrics]);
+    useEffect(renderLyricsError, [lyrics]);
 
     const renderTooltip = props => (
         <Tooltip {...props}>Note: This will briefly open a new window. You will need to log back in to view this page.</Tooltip>
@@ -207,7 +209,7 @@ const Main = (props) => {
                                     <StatSection stats={statsObject} selectedSongs={selectedSongs}/>
                                 </div>
                                 <div className="lyric-column">
-                                    <LyricSection song={selectedSongs[clickedSong]} lyrics={lyrics} songClicked={clickedSong !== null} hideFunc={toggleShowLyrics}/>
+                                    <LyricSection song={selectedSongs[clickedSong]} lyrics={lyrics} youtube={youtube} songClicked={clickedSong !== null} hideFunc={toggleShowLyrics}/>
                                 </div>
                             </Split>
 
