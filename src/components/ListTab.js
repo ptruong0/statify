@@ -58,8 +58,10 @@ const ListTab = (props) => {
 
 
     return (
+        <div className="stat-card-center">
         <div className="stat-card-container">
             {statComponents}
+        </div>
         </div>
     );
 }

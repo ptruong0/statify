@@ -26,6 +26,7 @@ import 'react-toastify/dist/ReactToastify.css';
     // histogram of audio features
     // look into chart.js
 // rename project from spot to statify
+// update dependencies with npm i
 // move token process to backend 
 // router
 
@@ -35,13 +36,15 @@ const Main = (props) => {
     const [username, setUsername] = useState(null);
     const [playlists, setPlaylists] = useState(null);
     const [selectedPlaylist, setSelectedPlaylist] = useState(null);
-    const [showPlaylists, setShowPlaylists] = useState(false);
     const [selectedSongs, setSelectedSongs] = useState(null);
     const [audioFeatures, setAudioFeatures] = useState(null);
     const [artistGenres, setArtistGenres] = useState(null);
     const [statsObject, setStatsObject] = useState(null);
     const [clickedSong, setClickedSong] = useState(null);
     const [lyrics, setLyrics] = useState(null);
+
+    const [showPlaylists, setShowPlaylists] = useState(false);
+    const [showLyrics, setShowLyrics] = useState(true);
 
 
     // called when page first loads
@@ -140,6 +143,11 @@ const Main = (props) => {
         setShowPlaylists(!showPlaylists);
     }
 
+    const toggleShowLyrics = () => {
+        setShowLyrics(!showLyrics);
+    }
+
+
     // triggered when the page first loads 
     useEffect(loadPage, []);
 
@@ -190,14 +198,24 @@ const Main = (props) => {
                             <div className="song-column">
                                 <SongSection playlist={selectedPlaylist.name} showPlaylists={showPlaylists} hideFunc={toggleShowPlaylist} selectedSongs={selectedSongs} audioFeatures={audioFeatures} selectSongFunc={selectSong} />
                             </div>
+
+                            {
+                                showLyrics ? 
+                            
                             <Split initialPrimarySize="60%" minPrimarySize="30%" minSecondarySize="30%">
                                 <div className="stat-column">
                                     <StatSection stats={statsObject} selectedSongs={selectedSongs}/>
                                 </div>
                                 <div className="lyric-column">
-                                    <LyricSection song={selectedSongs[clickedSong]} lyrics={lyrics} songClicked={clickedSong !== null} />
+                                    <LyricSection song={selectedSongs[clickedSong]} lyrics={lyrics} songClicked={clickedSong !== null} hideFunc={toggleShowLyrics}/>
                                 </div>
                             </Split>
+
+                            : 
+                            <div className="stat-column">
+                                <StatSection stats={statsObject} selectedSongs={selectedSongs} showLyricsFunc={!showLyrics ? toggleShowLyrics : null}/>
+                            </div>
+                            }
                         </Split>
                     </div>
 

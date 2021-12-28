@@ -9,7 +9,11 @@ const LyricSection = (props) => {
 
     return (
         <div>
-            <h5>Lyrics</h5>
+            <div>
+                <p onClick={props.hideFunc} className="hide-lyrics">Hide Tab</p>
+            </div>
+
+            <h5><b>Lyrics</b></h5>
             {props.song && props.lyrics ?
                 // song has selected and loaded
 

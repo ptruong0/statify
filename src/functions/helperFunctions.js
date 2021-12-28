@@ -96,14 +96,15 @@ export const lyricsToComponents = (lyrics) => {
             // console.log(lyrics.lyricHTML);
             if (html.length > 1) {
                 for (let i = 0; i < html.length; i++) {
-                    lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[i] }}></div>)
+                    lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[i] }} className="lyric-text"></div>)
                     lyricComponents.push(<br/>)
                 }
             } else {        // rare case with only one div of lyrics
-                lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[0] }}></div>)
+                lyricComponents.push(<div dangerouslySetInnerHTML={{ __html: html[0] }} className="lyric-text"></div>)
             }
         }
     }
+
     return lyricComponents;
 }
 
